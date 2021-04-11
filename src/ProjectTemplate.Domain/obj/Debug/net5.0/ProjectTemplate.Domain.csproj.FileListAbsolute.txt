@@ -1,0 +1,11 @@
+C:\Users\Eddy Moura\Documents\0 - Softwares proprios\ProjectTemplate-main\ProjectTemplate-main\src\ProjectTemplate.Domain\bin\Debug\net5.0\ProjectTemplate.Domain.deps.json
+C:\Users\Eddy Moura\Documents\0 - Softwares proprios\ProjectTemplate-main\ProjectTemplate-main\src\ProjectTemplate.Domain\bin\Debug\net5.0\ProjectTemplate.Domain.dll
+C:\Users\Eddy Moura\Documents\0 - Softwares proprios\ProjectTemplate-main\ProjectTemplate-main\src\ProjectTemplate.Domain\bin\Debug\net5.0\ref\ProjectTemplate.Domain.dll
+C:\Users\Eddy Moura\Documents\0 - Softwares proprios\ProjectTemplate-main\ProjectTemplate-main\src\ProjectTemplate.Domain\bin\Debug\net5.0\ProjectTemplate.Domain.pdb
+C:\Users\Eddy Moura\Documents\0 - Softwares proprios\ProjectTemplate-main\ProjectTemplate-main\src\ProjectTemplate.Domain\obj\Debug\net5.0\ProjectTemplate.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Eddy Moura\Documents\0 - Softwares proprios\ProjectTemplate-main\ProjectTemplate-main\src\ProjectTemplate.Domain\obj\Debug\net5.0\ProjectTemplate.Domain.AssemblyInfoInputs.cache
+C:\Users\Eddy Moura\Documents\0 - Softwares proprios\ProjectTemplate-main\ProjectTemplate-main\src\ProjectTemplate.Domain\obj\Debug\net5.0\ProjectTemplate.Domain.AssemblyInfo.cs
+C:\Users\Eddy Moura\Documents\0 - Softwares proprios\ProjectTemplate-main\ProjectTemplate-main\src\ProjectTemplate.Domain\obj\Debug\net5.0\ProjectTemplate.Domain.csproj.CoreCompileInputs.cache
+C:\Users\Eddy Moura\Documents\0 - Softwares proprios\ProjectTemplate-main\ProjectTemplate-main\src\ProjectTemplate.Domain\obj\Debug\net5.0\ProjectTemplate.Domain.dll
+C:\Users\Eddy Moura\Documents\0 - Softwares proprios\ProjectTemplate-main\ProjectTemplate-main\src\ProjectTemplate.Domain\obj\Debug\net5.0\ref\ProjectTemplate.Domain.dll
+C:\Users\Eddy Moura\Documents\0 - Softwares proprios\ProjectTemplate-main\ProjectTemplate-main\src\ProjectTemplate.Domain\obj\Debug\net5.0\ProjectTemplate.Domain.pdb

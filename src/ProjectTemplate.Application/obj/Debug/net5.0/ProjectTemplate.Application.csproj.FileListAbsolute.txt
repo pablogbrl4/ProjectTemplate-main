@@ -1,0 +1,15 @@
+C:\Users\Eddy Moura\Documents\0 - Softwares proprios\ProjectTemplate-main\ProjectTemplate-main\src\ProjectTemplate.Application\bin\Debug\net5.0\ProjectTemplate.Application.deps.json
+C:\Users\Eddy Moura\Documents\0 - Softwares proprios\ProjectTemplate-main\ProjectTemplate-main\src\ProjectTemplate.Application\bin\Debug\net5.0\ProjectTemplate.Application.dll
+C:\Users\Eddy Moura\Documents\0 - Softwares proprios\ProjectTemplate-main\ProjectTemplate-main\src\ProjectTemplate.Application\bin\Debug\net5.0\ref\ProjectTemplate.Application.dll
+C:\Users\Eddy Moura\Documents\0 - Softwares proprios\ProjectTemplate-main\ProjectTemplate-main\src\ProjectTemplate.Application\bin\Debug\net5.0\ProjectTemplate.Application.pdb
+C:\Users\Eddy Moura\Documents\0 - Softwares proprios\ProjectTemplate-main\ProjectTemplate-main\src\ProjectTemplate.Application\bin\Debug\net5.0\ProjectTemplate.Domain.dll
+C:\Users\Eddy Moura\Documents\0 - Softwares proprios\ProjectTemplate-main\ProjectTemplate-main\src\ProjectTemplate.Application\bin\Debug\net5.0\ProjectTemplate.Domain.pdb
+C:\Users\Eddy Moura\Documents\0 - Softwares proprios\ProjectTemplate-main\ProjectTemplate-main\src\ProjectTemplate.Application\obj\Debug\net5.0\ProjectTemplate.Application.csprojAssemblyReference.cache
+C:\Users\Eddy Moura\Documents\0 - Softwares proprios\ProjectTemplate-main\ProjectTemplate-main\src\ProjectTemplate.Application\obj\Debug\net5.0\ProjectTemplate.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Eddy Moura\Documents\0 - Softwares proprios\ProjectTemplate-main\ProjectTemplate-main\src\ProjectTemplate.Application\obj\Debug\net5.0\ProjectTemplate.Application.AssemblyInfoInputs.cache
+C:\Users\Eddy Moura\Documents\0 - Softwares proprios\ProjectTemplate-main\ProjectTemplate-main\src\ProjectTemplate.Application\obj\Debug\net5.0\ProjectTemplate.Application.AssemblyInfo.cs
+C:\Users\Eddy Moura\Documents\0 - Softwares proprios\ProjectTemplate-main\ProjectTemplate-main\src\ProjectTemplate.Application\obj\Debug\net5.0\ProjectTemplate.Application.csproj.CoreCompileInputs.cache
+C:\Users\Eddy Moura\Documents\0 - Softwares proprios\ProjectTemplate-main\ProjectTemplate-main\src\ProjectTemplate.Application\obj\Debug\net5.0\ProjectTemplate.Application.csproj.CopyComplete
+C:\Users\Eddy Moura\Documents\0 - Softwares proprios\ProjectTemplate-main\ProjectTemplate-main\src\ProjectTemplate.Application\obj\Debug\net5.0\ProjectTemplate.Application.dll
+C:\Users\Eddy Moura\Documents\0 - Softwares proprios\ProjectTemplate-main\ProjectTemplate-main\src\ProjectTemplate.Application\obj\Debug\net5.0\ref\ProjectTemplate.Application.dll
+C:\Users\Eddy Moura\Documents\0 - Softwares proprios\ProjectTemplate-main\ProjectTemplate-main\src\ProjectTemplate.Application\obj\Debug\net5.0\ProjectTemplate.Application.pdb
