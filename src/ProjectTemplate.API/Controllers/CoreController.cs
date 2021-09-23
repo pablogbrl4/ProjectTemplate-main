@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Mvc;
 using ProjectTemplate.Application.DTOs;
 using ProjectTemplate.Application.Interfaces;
 using ProjectTemplate.Domain.Entities;
@@ -39,7 +40,7 @@ namespace ProjectTemplate.API.Controllers
         }
 
         [HttpGet]
-        [Route("paginacao")]
+        [Route("pagination")]
         public async Task<IActionResult> ListarPorPaginacao(int limit, int page, CancellationToken cancellationToken)
         {
             try
@@ -55,7 +56,7 @@ namespace ProjectTemplate.API.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        public async Task<IActionResult> SelecionarPorId(int id)
+        public async Task<IActionResult> SelecionarPorId(Guid id)
         {
             try
             {
@@ -86,7 +87,8 @@ namespace ProjectTemplate.API.Controllers
         {
             try
             {
-                return new OkObjectResult(await _app.IncluirLista(dados));
+                await _app.IncluirLista(dados);
+                return new OkObjectResult(true);
             }
             catch (Exception ex)
             {
@@ -108,9 +110,34 @@ namespace ProjectTemplate.API.Controllers
             }
         }
 
+        [HttpPatch]
+        [Route("{id}")]
+        public async Task<IActionResult> Patch(Guid id, [FromBody] JsonPatchDocument<TDTO> patchEntity)
+        {
+            try
+            {
+                var objEntity = await _app.BuscarPorId(id);
+
+                if (objEntity == null)
+                {
+                    return NotFound();
+                }
+
+                patchEntity.ApplyTo(objEntity, ModelState);
+
+                await _app.Alterar(objEntity);
+
+                return new OkObjectResult(true);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
         [HttpDelete]
         [Route("{id}")]
-        public async Task<IActionResult> Excluir(int id)
+        public async Task<IActionResult> Excluir(Guid id)
         {
             try
             {

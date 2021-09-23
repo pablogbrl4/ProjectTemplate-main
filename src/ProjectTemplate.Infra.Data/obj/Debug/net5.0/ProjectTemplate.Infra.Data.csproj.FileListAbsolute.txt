@@ -16,3 +16,21 @@ C:\Users\Eddy Moura\Documents\0 - Softwares proprios\ProjectTemplate-main\Projec
 C:\Users\Eddy Moura\Documents\0 - Softwares proprios\ProjectTemplate-main\ProjectTemplate-main\src\ProjectTemplate.Infra.Data\obj\Debug\net5.0\ref\ProjectTemplate.Infra.Data.dll
 C:\Users\Eddy Moura\Documents\0 - Softwares proprios\ProjectTemplate-main\ProjectTemplate-main\src\ProjectTemplate.Infra.Data\obj\Debug\net5.0\ProjectTemplate.Infra.Data.pdb
 C:\Users\Eddy Moura\Documents\0 - Softwares proprios\ProjectTemplate-main\ProjectTemplate-main\src\ProjectTemplate.Infra.Data\obj\Debug\net5.0\ProjectTemplate.Infra.Data.genruntimeconfig.cache
+C:\Users\Eddy Moura\Documents\0 - Plural\ProjectTemplate-main\src\ProjectTemplate.Infra.Data\bin\Debug\net5.0\ProjectTemplate.Infra.Data.deps.json
+C:\Users\Eddy Moura\Documents\0 - Plural\ProjectTemplate-main\src\ProjectTemplate.Infra.Data\bin\Debug\net5.0\ProjectTemplate.Infra.Data.runtimeconfig.json
+C:\Users\Eddy Moura\Documents\0 - Plural\ProjectTemplate-main\src\ProjectTemplate.Infra.Data\bin\Debug\net5.0\ProjectTemplate.Infra.Data.runtimeconfig.dev.json
+C:\Users\Eddy Moura\Documents\0 - Plural\ProjectTemplate-main\src\ProjectTemplate.Infra.Data\bin\Debug\net5.0\ProjectTemplate.Infra.Data.dll
+C:\Users\Eddy Moura\Documents\0 - Plural\ProjectTemplate-main\src\ProjectTemplate.Infra.Data\bin\Debug\net5.0\ref\ProjectTemplate.Infra.Data.dll
+C:\Users\Eddy Moura\Documents\0 - Plural\ProjectTemplate-main\src\ProjectTemplate.Infra.Data\bin\Debug\net5.0\ProjectTemplate.Infra.Data.pdb
+C:\Users\Eddy Moura\Documents\0 - Plural\ProjectTemplate-main\src\ProjectTemplate.Infra.Data\bin\Debug\net5.0\ProjectTemplate.Domain.dll
+C:\Users\Eddy Moura\Documents\0 - Plural\ProjectTemplate-main\src\ProjectTemplate.Infra.Data\bin\Debug\net5.0\ProjectTemplate.Domain.pdb
+C:\Users\Eddy Moura\Documents\0 - Plural\ProjectTemplate-main\src\ProjectTemplate.Infra.Data\obj\Debug\net5.0\ProjectTemplate.Infra.Data.csproj.AssemblyReference.cache
+C:\Users\Eddy Moura\Documents\0 - Plural\ProjectTemplate-main\src\ProjectTemplate.Infra.Data\obj\Debug\net5.0\ProjectTemplate.Infra.Data.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Eddy Moura\Documents\0 - Plural\ProjectTemplate-main\src\ProjectTemplate.Infra.Data\obj\Debug\net5.0\ProjectTemplate.Infra.Data.AssemblyInfoInputs.cache
+C:\Users\Eddy Moura\Documents\0 - Plural\ProjectTemplate-main\src\ProjectTemplate.Infra.Data\obj\Debug\net5.0\ProjectTemplate.Infra.Data.AssemblyInfo.cs
+C:\Users\Eddy Moura\Documents\0 - Plural\ProjectTemplate-main\src\ProjectTemplate.Infra.Data\obj\Debug\net5.0\ProjectTemplate.Infra.Data.csproj.CoreCompileInputs.cache
+C:\Users\Eddy Moura\Documents\0 - Plural\ProjectTemplate-main\src\ProjectTemplate.Infra.Data\obj\Debug\net5.0\ProjectTemplate.Infra.Data.csproj.CopyComplete
+C:\Users\Eddy Moura\Documents\0 - Plural\ProjectTemplate-main\src\ProjectTemplate.Infra.Data\obj\Debug\net5.0\ProjectTemplate.Infra.Data.dll
+C:\Users\Eddy Moura\Documents\0 - Plural\ProjectTemplate-main\src\ProjectTemplate.Infra.Data\obj\Debug\net5.0\ref\ProjectTemplate.Infra.Data.dll
+C:\Users\Eddy Moura\Documents\0 - Plural\ProjectTemplate-main\src\ProjectTemplate.Infra.Data\obj\Debug\net5.0\ProjectTemplate.Infra.Data.pdb
+C:\Users\Eddy Moura\Documents\0 - Plural\ProjectTemplate-main\src\ProjectTemplate.Infra.Data\obj\Debug\net5.0\ProjectTemplate.Infra.Data.genruntimeconfig.cache

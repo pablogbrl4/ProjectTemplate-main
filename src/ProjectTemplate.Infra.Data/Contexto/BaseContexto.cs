@@ -7,7 +7,6 @@ namespace ProjectTemplate.Infra.Data.Contexto
 {
     public class BaseContexto : DbContext
     {
-
         protected IDbContextTransaction _contextoTransaction { get; set; }
 
         public BaseContexto(DbContextOptions<BaseContexto> dbContextOptions)
@@ -18,9 +17,8 @@ namespace ProjectTemplate.Infra.Data.Contexto
         public async Task<IDbContextTransaction> IniciarTransaction()
         {
             if (_contextoTransaction == null)
-            {
                 _contextoTransaction = await this.Database.BeginTransactionAsync();
-            }
+
             return _contextoTransaction;
         }
 
@@ -28,9 +26,7 @@ namespace ProjectTemplate.Infra.Data.Contexto
         private async Task RollBack()
         {
             if (_contextoTransaction != null)
-            {
                 await _contextoTransaction.RollbackAsync();
-            }
         }
 
         private async Task Salvar()
@@ -57,10 +53,11 @@ namespace ProjectTemplate.Infra.Data.Contexto
             }
         }
 
-        public async Task SalvarMudancas()
+        public async Task SalvarMudancas(bool commit = true)
         {
             await Salvar();
-            await Commit();
+            if (commit)
+                await Commit();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -13,17 +13,21 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4 - Domain", "4 - Domain", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5 - Infrastructure", "5 - Infrastructure", "{E1B42C97-774A-40F3-9F1A-286C9CE2A8A1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectTemplate.API", "ProjectTemplate.API\ProjectTemplate.API.csproj", "{F66B44AB-12B0-4712-A07E-6B045DBC4AF0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectTemplate.API", "ProjectTemplate.API\ProjectTemplate.API.csproj", "{F66B44AB-12B0-4712-A07E-6B045DBC4AF0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectTemplate.Infra.Data", "ProjectTemplate.Infra.Data\ProjectTemplate.Infra.Data.csproj", "{96213B58-40D2-4B7D-AAB7-0DC0743E6253}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectTemplate.Infra.Data", "ProjectTemplate.Infra.Data\ProjectTemplate.Infra.Data.csproj", "{96213B58-40D2-4B7D-AAB7-0DC0743E6253}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectTemplate.Infra.IoC", "ProjectTemplate.Infra.IoC\ProjectTemplate.Infra.IoC.csproj", "{FEE5C108-A902-4790-8FB8-709AE47F49F4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectTemplate.Infra.IoC", "ProjectTemplate.Infra.IoC\ProjectTemplate.Infra.IoC.csproj", "{FEE5C108-A902-4790-8FB8-709AE47F49F4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectTemplate.Application", "ProjectTemplate.Application\ProjectTemplate.Application.csproj", "{C7EFF61C-61BE-40D7-BA08-B752F6C33659}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectTemplate.Application", "ProjectTemplate.Application\ProjectTemplate.Application.csproj", "{C7EFF61C-61BE-40D7-BA08-B752F6C33659}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectTemplate.Domain", "ProjectTemplate.Domain\ProjectTemplate.Domain.csproj", "{FDCF7C05-E90A-45AB-879E-B2A2C0C58028}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectTemplate.Domain", "ProjectTemplate.Domain\ProjectTemplate.Domain.csproj", "{FDCF7C05-E90A-45AB-879E-B2A2C0C58028}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectTemplate.View", "ProjectTemplate.View\ProjectTemplate.View.csproj", "{F65CFB3D-47B9-48B3-AD6E-2FF7289F58AB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectTemplate.View", "ProjectTemplate.View\ProjectTemplate.View.csproj", "{F65CFB3D-47B9-48B3-AD6E-2FF7289F58AB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "6 - Utilities", "6 - Utilities", "{05EA06FC-931E-4C1A-AA47-E5F543085ACC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilities", "Utilities\Utilities.csproj", "{4052568A-E387-46BF-A453-7DCF92CA46E0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -55,6 +59,10 @@ Global
 		{F65CFB3D-47B9-48B3-AD6E-2FF7289F58AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F65CFB3D-47B9-48B3-AD6E-2FF7289F58AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F65CFB3D-47B9-48B3-AD6E-2FF7289F58AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4052568A-E387-46BF-A453-7DCF92CA46E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4052568A-E387-46BF-A453-7DCF92CA46E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4052568A-E387-46BF-A453-7DCF92CA46E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4052568A-E387-46BF-A453-7DCF92CA46E0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -66,6 +74,7 @@ Global
 		{C7EFF61C-61BE-40D7-BA08-B752F6C33659} = {1A13F24C-F895-4654-BF75-FEC4C37E6487}
 		{FDCF7C05-E90A-45AB-879E-B2A2C0C58028} = {2FE61419-7DC4-48A1-89D5-8EDF758A1DA4}
 		{F65CFB3D-47B9-48B3-AD6E-2FF7289F58AB} = {FEBC8612-CE7D-4206-A8C5-8677931AB0C1}
+		{4052568A-E387-46BF-A453-7DCF92CA46E0} = {05EA06FC-931E-4C1A-AA47-E5F543085ACC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {60A722B9-EE76-4BBF-9F13-354287CE936D}

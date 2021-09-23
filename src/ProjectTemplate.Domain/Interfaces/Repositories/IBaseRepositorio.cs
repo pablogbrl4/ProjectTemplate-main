@@ -12,25 +12,30 @@ namespace ProjectTemplate.Domain.Interfaces.Repositories
     public interface IBaseRepositorio<T> where T : BaseEntidade
     {
         #region Escrita
-        Task<int> Incluir(T entidade);
+        Task<Guid> Incluir(T entidade);
 
-        Task<List<T>> IncluirLista(List<T> entidade);
+        Task IncluirLista(List<T> entidade);
 
-        Task<T> Alterar(T entidade);
+        void Alterar(T entidade);
 
-        Task<bool> Excluir(int id);
+        Task<bool> Excluir(Guid id);
+
+        Task IniciarTransaction();
+
+        Task SalvarMudancas(bool commit = true);
         #endregion
 
         #region Leitura
-        Task<T> BuscarPorId(int id, string[] includes = default);
 
-        Task<T> BuscarComPesquisa(Expression<Func<T, bool>> expression, string[] includes = default);
+        IQueryable<T> Buscar(Expression<Func<T, bool>> expression, string[] includes = default, bool tracking = true);
 
-        Task<IQueryable<T>> Buscar(Expression<Func<T, bool>> expression, string[] includes = default);
+        Task<T> BuscarPorId(Guid id, string[] includes = default, bool tracking = true);
 
-        Task<IEnumerable<T>> BuscarTodos(string[] includes = default);
+        Task<T> BuscarComPesquisa(Expression<Func<T, bool>> expression, string[] includes = default, bool tracking = true);
+      
+        Task<IEnumerable<T>> BuscarTodos(string[] includes = default, bool tracking = true);
 
-        Task<IEnumerable<T>> BuscarTodosComPesquisa(Expression<Func<T, bool>> expression, string[] includes);
+        Task<IEnumerable<T>> BuscarTodosComPesquisa(Expression<Func<T, bool>> expression, string[] includes, bool tracking = true);
 
         Task<PaginacaoModel<T>> BuscarTodosPaginacao(int limit, int page, CancellationToken cancellationToken, string[] includes = default);
 

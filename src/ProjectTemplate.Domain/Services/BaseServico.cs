@@ -21,22 +21,29 @@ namespace ProjectTemplate.Domain.Services
         }
 
         #region Escrita
-        public async Task<int> Incluir(T entidade)
+        public virtual async Task<Guid> Incluir(T entidade)
         {
-            return await _repositorio.Incluir(entidade);
+            await _repositorio.IniciarTransaction();
+            Guid id = await _repositorio.Incluir(entidade);
+            await _repositorio.SalvarMudancas();
+            return id;
         }
 
-        public async Task<List<T>> IncluirLista(List<T> entidade)
+        public virtual async Task IncluirLista(List<T> entidade)
         {
-            return await _repositorio.IncluirLista(entidade);
+            await _repositorio.IniciarTransaction();
+            await _repositorio.IncluirLista(entidade);
+            await _repositorio.SalvarMudancas();
         }
 
-        public virtual async Task<T> Alterar(T entidade)
+        public virtual async Task Alterar(T entidade)
         {
-            return await _repositorio.Alterar(entidade);
+            await _repositorio.IniciarTransaction();
+             _repositorio.Alterar(entidade);
+            await _repositorio.SalvarMudancas();
         }
 
-        public async Task<bool> Excluir(int id)
+        public async Task<bool> Excluir(Guid id)
         {
             return await _repositorio.Excluir(id);
         }
@@ -44,29 +51,30 @@ namespace ProjectTemplate.Domain.Services
         #endregion
 
         #region Leitura
-        public virtual async Task<T> BuscarPorId(int id, string[] includes = default)
+
+        public IQueryable<T> Buscar(Expression<Func<T, bool>> expression, string[] includes = default, bool tracking = true)
         {
-            return await _repositorio.BuscarPorId(id, includes);
+            return _repositorio.Buscar(expression, includes, tracking);
         }
 
-        public async Task<T> BuscarComPesquisa(Expression<Func<T, bool>> expression, string[] includes = default)
+        public virtual async Task<T> BuscarPorId(Guid id, string[] includes = default, bool tracking = true)
         {
-            return await _repositorio.BuscarComPesquisa(expression);
+            return await _repositorio.BuscarPorId(id, includes, tracking);
         }
 
-        public Task<IQueryable<T>> Buscar(Expression<Func<T, bool>> expression, string[] includes = default)
+        public virtual async Task<T> BuscarComPesquisa(Expression<Func<T, bool>> expression, string[] includes = default, bool tracking = true)
         {
-            return _repositorio.Buscar(expression);
+            return await _repositorio.BuscarComPesquisa(expression, includes, tracking);
         }
 
-        public virtual async Task<IEnumerable<T>> BuscarTodos(string[] includes = default)
+        public virtual async Task<IEnumerable<T>> BuscarTodos(string[] includes = default, bool tracking = true)
         {
-            return await _repositorio.BuscarTodos(includes);
+            return await _repositorio.BuscarTodos(includes, tracking);
         }
 
-        public async Task<IEnumerable<T>> BuscarTodosComPesquisa(Expression<Func<T, bool>> expression, string[] includes = default)
+        public virtual async Task<IEnumerable<T>> BuscarTodosComPesquisa(Expression<Func<T, bool>> expression, string[] includes = default, bool tracking = true)
         {
-            return await _repositorio.BuscarTodosComPesquisa(expression, includes);
+            return await _repositorio.BuscarTodosComPesquisa(expression, includes, tracking);
         }
 
         public async Task<PaginacaoModel<T>> BuscarTodosPaginacao(int limit, int page, CancellationToken cancellationToken, string[] includes = null)

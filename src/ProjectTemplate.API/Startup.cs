@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,6 +11,7 @@ using ProjectTemplate.API.Filters;
 using ProjectTemplate.Application.Mappings;
 using ProjectTemplate.Infra.Data.Contexto;
 using ProjectTemplate.Infra.IoC;
+using System.Globalization;
 using System.Text;
 
 namespace ProjectTemplate.API
@@ -35,6 +37,7 @@ namespace ProjectTemplate.API
             InjectorDependencies.Registrer(services);
             services.AddAutoMapper(x => x.AddProfile(new BaseMapping()));
             services.AddMvc();
+            services.AddControllers().AddNewtonsoftJson();
 
             ConfigureAuth(services);
             ConfigureSwagger(services);
@@ -42,6 +45,22 @@ namespace ProjectTemplate.API
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            // Define Localization
+            var supportedCultures = new[] { new CultureInfo("pt-BR") };
+            app.UseRequestLocalization(new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture(culture: "pt-BR", uiCulture: "pt-BR"),
+                SupportedCultures = supportedCultures,
+                SupportedUICultures = supportedCultures
+            });
+
+            // global cors policy
+            app.UseCors(x => x
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .SetIsOriginAllowed(origin => true) // allow any origin
+                .AllowCredentials()); // allow credentials
+
             app.UseSwagger();
 
             app.UseSwaggerUI(c =>
@@ -51,6 +70,8 @@ namespace ProjectTemplate.API
             });
 
             app.UseRouting();
+            //app.UseAuthentication();
+            //app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

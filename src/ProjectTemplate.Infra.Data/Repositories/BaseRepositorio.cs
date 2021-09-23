@@ -10,6 +10,7 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
+
 namespace ProjectTemplate.Infra.Data.Repositories
 {
     public class BaseRepositorio<T> : IBaseRepositorio<T> where T : BaseEntidade
@@ -24,35 +25,35 @@ namespace ProjectTemplate.Infra.Data.Repositories
         }
 
         #region Leitura
-
-        public async Task<IQueryable<T>> Buscar(Expression<Func<T, bool>> expression, string[] includes = default)
+        public IQueryable<T> Buscar(Expression<Func<T, bool>> expression, string[] includes = default, bool tracking = false)
         {
             var query = _dbSet.Where(expression);
+            if (tracking == false)
+                query = query.AsNoTracking();
             if (includes != null)
                 foreach (var property in includes)
                     query = query.Include(property);
             return query;
         }
 
-        public async Task<T> BuscarPorId(int id, string[] includes = default)
+        public virtual async Task<T> BuscarPorId(Guid id, string[] includes = default, bool tracking = false)
         {
-            return await Buscar(x => x.Id == id, includes).Result.FirstOrDefaultAsync();
+            return await Buscar(x => x.Id == id, includes, tracking).FirstOrDefaultAsync();
         }
 
-        public async Task<T> BuscarComPesquisa(Expression<Func<T, bool>> expression, string[] includes = default)
+        public virtual async Task<T> BuscarComPesquisa(Expression<Func<T, bool>> expression, string[] includes = default, bool tracking = true)
         {
-            return await Buscar(expression, includes).Result.FirstOrDefaultAsync();
+            return await Buscar(expression, includes).FirstOrDefaultAsync();
+        }
+       
+        public async Task<IEnumerable<T>> BuscarTodos(string[] includes = default, bool tracking = true)
+        {
+            return await Buscar(x => true, includes).ToListAsync();
         }
 
-
-        public async Task<IEnumerable<T>> BuscarTodos(string[] includes = default)
+        public async Task<IEnumerable<T>> BuscarTodosComPesquisa(Expression<Func<T, bool>> expression, string[] includes = default, bool tracking = true)
         {
-            return await Buscar(x => true, includes).Result.ToListAsync();
-        }
-
-        public async Task<IEnumerable<T>> BuscarTodosComPesquisa(Expression<Func<T, bool>> expression, string[] includes = default)
-        {
-            return await Buscar(expression, includes).Result.ToListAsync();
+            return await Buscar(expression, includes).ToListAsync();
         }
 
         public async Task<PaginacaoModel<T>> BuscarTodosPaginacao(int limit, int page, CancellationToken cancellationToken, string[] includes = default)
@@ -76,41 +77,30 @@ namespace ProjectTemplate.Infra.Data.Repositories
 
         #region Escrita
 
-        public async Task<int> Incluir(T entidade)
+        public virtual async Task<Guid> Incluir(T entidade)
         {
-            await _context.IniciarTransaction();
             var obj = await _dbSet.AddAsync(entidade);
-            await _context.SalvarMudancas();
             return obj.Entity.Id;
         }
 
-        public async Task<List<T>> IncluirLista(List<T> entidade)
+        public virtual async Task IncluirLista(List<T> entidades)
         {
-            await _context.IniciarTransaction();
-            await _dbSet.AddRangeAsync(entidade);
-            await _context.SalvarMudancas();
-
-            return entidade;
+            await _dbSet.AddRangeAsync(entidades);
         }
 
-        public virtual async Task<T> Alterar(T entidade)
+        public virtual void Alterar(T entidade)
         {
-            await _context.IniciarTransaction();
             _context.Entry(entidade).State = EntityState.Modified;
-            await _context.SalvarMudancas();
-            return entidade;
         }
 
-        public async Task<bool> Excluir(int id)
+        public async Task<bool> Excluir(Guid id)
         {
             try
             {
                 var entidade = await BuscarPorId(id);
                 if (entidade != null)
                 {
-                    await _context.IniciarTransaction();
                     _dbSet.Remove(entidade);
-                    await _context.SalvarMudancas();
                 }
                 return true;
             }
@@ -118,6 +108,16 @@ namespace ProjectTemplate.Infra.Data.Repositories
             {
                 return false;
             }
+        }
+
+        public async Task IniciarTransaction()
+        {
+            await _context.IniciarTransaction();
+        }
+
+        public async Task SalvarMudancas(bool commit = true)
+        {
+            await _context.SalvarMudancas(commit);
         }
 
         #endregion

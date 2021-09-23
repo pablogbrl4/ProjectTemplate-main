@@ -27,9 +27,8 @@ namespace ProjectTemplate.Application.Services
             _mapper = mapper;
         }
 
-
         #region Leitura
-        public async Task<TDTO> BuscarPorId(int id)
+        public async Task<TDTO> BuscarPorId(Guid id)
         {
             return _mapper.Map<TDTO>(await _service.BuscarPorId(id));
         }
@@ -39,12 +38,10 @@ namespace ProjectTemplate.Application.Services
             return _mapper.Map<IEnumerable<TDTO>>(await _service.BuscarTodos(includes));
         }
 
-
         public async Task<TDTO> BuscarComPesquisa(Expression<Func<T, bool>> expression, string[] includes = default)
         {
             return _mapper.Map<TDTO>(await _service.BuscarComPesquisa(expression, includes));
         }
-
 
         public async Task<IEnumerable<TDTO>> BuscarTodosComPesquisa(Expression<Func<T, bool>> expression, string[] includes = default)
         {
@@ -59,22 +56,23 @@ namespace ProjectTemplate.Application.Services
         #endregion
 
         #region Escrita
-        public async Task<int> Incluir(TDTO entidade)
+
+        public async Task<Guid> Incluir(TDTO entidade)
         {
             return await _service.Incluir(_mapper.Map<T>(entidade));
         }
 
-        public async Task<List<TDTO>> IncluirLista(List<TDTO> entidade)
+        public async Task IncluirLista(List<TDTO> entidade)
         {
-            return _mapper.Map<List<TDTO>>(await _service.IncluirLista(_mapper.Map<List<T>>(entidade)));
+            await _service.IncluirLista(_mapper.Map<List<T>>(entidade));
         }
 
-        public async Task<TDTO> Alterar(TDTO entidade)
+        public async Task Alterar(TDTO entidade)
         {
-            return _mapper.Map<TDTO>(await _service.Alterar(_mapper.Map<T>(entidade)));
+            await _service.Alterar(_mapper.Map<T>(entidade));
         }
 
-        public async Task<bool> Excluir(int id)
+        public async Task<bool> Excluir(Guid id)
         {
             return await _service.Excluir(id);
         }

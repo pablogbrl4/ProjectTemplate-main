@@ -12,18 +12,17 @@ namespace ProjectTemplate.Application.Interfaces
     public interface IBaseApp<T, TDTO> where T : BaseEntidade where TDTO : BaseEntidadeDTO
     {
         #region Escrita
-        Task<int> Incluir(TDTO entidade);
+        Task<Guid> Incluir(TDTO entidade);
 
-        Task<List<TDTO>> IncluirLista(List<TDTO> entidade);
+        Task IncluirLista(List<TDTO> entidade);
 
-        Task<TDTO> Alterar(TDTO entidade);
+        Task Alterar(TDTO entidade);
 
-        Task<bool> Excluir(int id);
+        Task<bool> Excluir(Guid id);
         #endregion
 
-
         #region Leitura
-        Task<TDTO> BuscarPorId(int id);
+        Task<TDTO> BuscarPorId(Guid id);
 
         Task<IEnumerable<TDTO>> BuscarTodos(string[] includes = default);
 

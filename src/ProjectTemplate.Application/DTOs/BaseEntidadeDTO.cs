@@ -1,7 +1,9 @@
-﻿namespace ProjectTemplate.Application.DTOs
+﻿using System;
+
+namespace ProjectTemplate.Application.DTOs
 {
     public abstract class BaseEntidadeDTO
     {
-        public int Id { get; }
+        public Guid Id { get; }
     }
 }

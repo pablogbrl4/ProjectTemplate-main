@@ -1,7 +1,9 @@
-﻿namespace ProjectTemplate.Domain.Entities
+﻿using System;
+
+namespace ProjectTemplate.Domain.Entities
 {
     public abstract class BaseEntidade
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
     }
 }
