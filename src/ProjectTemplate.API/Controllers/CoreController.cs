@@ -24,8 +24,9 @@ namespace ProjectTemplate.API.Controllers
         protected readonly ILogger _logger;
 
         public CoreController(
-            ILogger logger, 
-            IBaseApp<T, TDTO> app)
+            IBaseApp<T, TDTO> app,
+            ILogger logger
+            )
         {
             _app = app;
             _logger = logger;
@@ -35,7 +36,7 @@ namespace ProjectTemplate.API.Controllers
 
         [HttpGet]
         [Route("")]
-        public async Task<IActionResult> ListarPorPaginacao([FromQuery] PagesClienteRequest urlQueryParameters, CancellationToken cancellationToken)
+        public async Task<IActionResult> ListarPorPaginacao([FromQuery] PagesClienteRequest urlQueryParameters, CancellationToken cancellationToken = default)
         {
             try
             {
