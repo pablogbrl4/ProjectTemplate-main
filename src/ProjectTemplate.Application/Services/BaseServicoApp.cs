@@ -27,6 +27,16 @@ namespace ProjectTemplate.Application.Services
             _mapper = mapper;
         }
 
+        public async Task IniciarTransaction()
+        {
+            await _service.IniciarTransaction();
+        }
+
+        public async Task SalvarMudancas(bool commit = true)
+        {
+            await _service.SalvarMudancas(commit);
+        }
+
         #region Leitura
 
         public virtual async Task<TDTO> BuscarPorId(object id, string[] includes = default, bool tracking = false)

@@ -23,29 +23,18 @@ namespace ProjectTemplate.API.Controllers
         protected readonly IBaseApp<T, TDTO> _app;
         protected readonly ILogger _logger;
 
-        public CoreController(ILogger logger, IBaseApp<T, TDTO> app)
+        public CoreController(
+            ILogger logger, 
+            IBaseApp<T, TDTO> app)
         {
             _app = app;
             _logger = logger;
         }
 
-        [HttpGet]
-        [Route("")]
-        public async Task<IActionResult> Listar()
-        {
-            try
-            {
-                var list = await _app.BuscarTodos();
-                return new OkObjectResult(list);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
+        #region Leitura
 
         [HttpGet]
-        [Route("pagination")]
+        [Route("")]
         public async Task<IActionResult> ListarPorPaginacao([FromQuery] PagesClienteRequest urlQueryParameters, CancellationToken cancellationToken)
         {
             try
@@ -87,12 +76,20 @@ namespace ProjectTemplate.API.Controllers
             }
         }
 
+        #endregion Leitura
+
+        #region Escrita
+
         [HttpPost]
+        [Route("")]
         public async Task<IActionResult> Incluir([FromBody] TDTO dado)
         {
             try
             {
-                return new OkObjectResult(await _app.Incluir(dado));
+                await _app.IniciarTransaction();
+                var id = await _app.Incluir(dado);
+                await _app.SalvarMudancas();
+                return new OkObjectResult(id);
             }
             catch (Exception ex)
             {
@@ -101,11 +98,14 @@ namespace ProjectTemplate.API.Controllers
         }
 
         [HttpPost]
+        [Route("list")]
         public async Task<IActionResult> IncluirLista([FromBody] List<TDTO> dados)
         {
             try
             {
+                await _app.IniciarTransaction();
                 await _app.IncluirLista(dados);
+                await _app.SalvarMudancas();
                 return new OkObjectResult(true);
             }
             catch (Exception ex)
@@ -115,11 +115,31 @@ namespace ProjectTemplate.API.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Alterar([FromBody] TDTO dado)
+        [Route("{id}")]
+        public async Task<IActionResult> Alterar(object id, [FromBody] TDTO dado)
         {
             try
             {
+                await _app.IniciarTransaction();
                 _app.Alterar(dado);
+                await _app.SalvarMudancas();
+                return new OkObjectResult(true);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut]
+        [Route("")]
+        public async Task<IActionResult> AlterarLista([FromBody] List<TDTO> dados)
+        {
+            try
+            {
+                await _app.IniciarTransaction();
+                _app.AlterarLista(dados);
+                await _app.SalvarMudancas();
                 return new OkObjectResult(true);
             }
             catch (Exception ex)
@@ -137,13 +157,13 @@ namespace ProjectTemplate.API.Controllers
                 var objEntity = await _app.BuscarPorId(id);
 
                 if (objEntity == null)
-                {
                     return NotFound();
-                }
 
                 patchEntity.ApplyTo(objEntity, ModelState);
 
+                await _app.IniciarTransaction();
                 _app.Alterar(objEntity);
+                await _app.SalvarMudancas();
 
                 return new OkObjectResult(true);
             }
@@ -159,7 +179,9 @@ namespace ProjectTemplate.API.Controllers
         {
             try
             {
+                await _app.IniciarTransaction();
                 await _app.Excluir(id);
+                await _app.SalvarMudancas();
                 return new OkObjectResult(true);
             }
             catch (Exception ex)
@@ -167,5 +189,7 @@ namespace ProjectTemplate.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        #endregion Escrita
     }
 }

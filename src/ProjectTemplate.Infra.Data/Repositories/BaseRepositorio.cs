@@ -24,6 +24,16 @@ namespace ProjectTemplate.Infra.Data.Repositories
             _dbSet = context.Set<T>();
         }
 
+        public async Task IniciarTransaction()
+        {
+            await _context.IniciarTransaction();
+        }
+
+        public async Task SalvarMudancas(bool commit = true)
+        {
+            await _context.SalvarMudancas(commit);
+        }
+
         #region Leitura
 
         private IQueryable<T> Buscar(Expression<Func<T, bool>> expression, string[] includes = default, bool tracking = false)

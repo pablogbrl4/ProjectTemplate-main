@@ -10,6 +10,10 @@ namespace ProjectTemplate.Domain.Interfaces.Repositories
 {
     public interface IBaseRepositorio<T> where T : BaseEntidade
     {
+        Task IniciarTransaction();
+
+        Task SalvarMudancas(bool commit = true);
+
         #region Escrita
 
         Task<object> Incluir(T entidade);

@@ -10,6 +10,8 @@ namespace ProjectTemplate.Domain.Interfaces.Services
 {
     public interface IBaseServico<T> where T : BaseEntidade
     {
+        Task IniciarTransaction();
+        Task SalvarMudancas(bool commit = true);
 
         #region Escrita
 

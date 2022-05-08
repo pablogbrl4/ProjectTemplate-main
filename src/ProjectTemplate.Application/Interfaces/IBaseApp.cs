@@ -11,6 +11,9 @@ namespace ProjectTemplate.Application.Interfaces
 {
     public interface IBaseApp<T, TDTO> where T : BaseEntidade where TDTO : BaseEntidadeDTO
     {
+        Task IniciarTransaction();
+        Task SalvarMudancas(bool commit = true);
+
         #region Escrita
         Task<object> Incluir(TDTO entidade);
 

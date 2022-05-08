@@ -19,6 +19,16 @@ namespace ProjectTemplate.Domain.Services
             _repositorio = repositorio;
         }
 
+        public async Task IniciarTransaction()
+        {
+            await _repositorio.IniciarTransaction();
+        }
+
+        public async Task SalvarMudancas(bool commit = true)
+        {
+            await _repositorio.SalvarMudancas(commit);
+        }
+
         #region Escrita
 
         public virtual async Task<object> Incluir(T entidade)
