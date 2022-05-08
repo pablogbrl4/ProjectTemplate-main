@@ -4,7 +4,6 @@ using ProjectTemplate.Domain.Interfaces.Services;
 using ProjectTemplate.Domain.Paginacao;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,65 +20,63 @@ namespace ProjectTemplate.Domain.Services
         }
 
         #region Escrita
-        public virtual async Task<Guid> Incluir(T entidade)
+
+        public virtual async Task<object> Incluir(T entidade)
         {
-            await _repositorio.IniciarTransaction();
-            Guid id = await _repositorio.Incluir(entidade);
-            await _repositorio.SalvarMudancas();
-            return id;
+            return await _repositorio.Incluir(entidade);
         }
 
-        public virtual async Task IncluirLista(List<T> entidade)
+        public virtual async Task IncluirLista(IEnumerable<T> entidades)
         {
-            await _repositorio.IniciarTransaction();
-            await _repositorio.IncluirLista(entidade);
-            await _repositorio.SalvarMudancas();
+            await _repositorio.IncluirLista(entidades);
         }
 
-        public virtual async Task Alterar(T entidade)
+        public virtual void Alterar(T entidade)
         {
-            await _repositorio.IniciarTransaction();
-             _repositorio.Alterar(entidade);
-            await _repositorio.SalvarMudancas();
+            _repositorio.Alterar(entidade);
+        }
+        public virtual void AlterarLista(IEnumerable<T> entidades)
+        {
+            _repositorio.AlterarLista(entidades);
         }
 
-        public async Task<bool> Excluir(Guid id)
+        public virtual async Task Excluir(object id)
         {
-            return await _repositorio.Excluir(id);
+            await _repositorio.Excluir(id);
+        }
+
+        public virtual void Excluir(T entidade)
+        {
+            _repositorio.Excluir(entidade);
         }
 
         #endregion
 
         #region Leitura
 
-        public IQueryable<T> Buscar(Expression<Func<T, bool>> expression, string[] includes = default, bool tracking = true)
-        {
-            return _repositorio.Buscar(expression, includes, tracking);
-        }
-
-        public virtual async Task<T> BuscarPorId(Guid id, string[] includes = default, bool tracking = true)
+        public virtual async Task<T> BuscarPorId(object id, string[] includes = default, bool tracking = false)
         {
             return await _repositorio.BuscarPorId(id, includes, tracking);
         }
 
-        public virtual async Task<T> BuscarComPesquisa(Expression<Func<T, bool>> expression, string[] includes = default, bool tracking = true)
+        public virtual async Task<T> BuscarComPesquisa(Expression<Func<T, bool>> expression, string[] includes = default, bool tracking = false)
         {
             return await _repositorio.BuscarComPesquisa(expression, includes, tracking);
         }
 
-        public virtual async Task<IEnumerable<T>> BuscarTodos(string[] includes = default, bool tracking = true)
+        public virtual async Task<IEnumerable<T>> BuscarTodos(string[] includes = default, bool tracking = false)
         {
             return await _repositorio.BuscarTodos(includes, tracking);
         }
 
-        public virtual async Task<IEnumerable<T>> BuscarTodosComPesquisa(Expression<Func<T, bool>> expression, string[] includes = default, bool tracking = true)
+        public virtual async Task<IEnumerable<T>> BuscarTodosComPesquisa(Expression<Func<T, bool>> expression, string[] includes = default, bool tracking = false)
         {
             return await _repositorio.BuscarTodosComPesquisa(expression, includes, tracking);
         }
 
-        public async Task<PaginacaoModel<T>> BuscarTodosPaginacao(int limit, int page, CancellationToken cancellationToken, string[] includes = null)
+        public async Task<PaginacaoModel<T>> BuscarTodosPaginacao(Expression<Func<T, bool>> expression, int limit, int page, CancellationToken cancellationToken, string[] includes = default, bool tracking = false)
         {
-            return await _repositorio.BuscarTodosPaginacao(limit, page, cancellationToken, includes);
+            return await _repositorio.BuscarTodosPaginacao(expression, limit, page, cancellationToken, includes, tracking);
         }
         #endregion
     }

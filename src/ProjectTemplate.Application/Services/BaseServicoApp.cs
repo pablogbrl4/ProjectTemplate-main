@@ -28,56 +28,66 @@ namespace ProjectTemplate.Application.Services
         }
 
         #region Leitura
-        public async Task<TDTO> BuscarPorId(Guid id)
+
+        public virtual async Task<TDTO> BuscarPorId(object id, string[] includes = default, bool tracking = false)
         {
-            return _mapper.Map<TDTO>(await _service.BuscarPorId(id));
+            return _mapper.Map<TDTO>(await _service.BuscarPorId(id, includes, tracking));
         }
 
-        public async Task<IEnumerable<TDTO>> BuscarTodos(string[] includes = default)
+        public virtual async Task<TDTO> BuscarComPesquisa(Expression<Func<T, bool>> expression, string[] includes = default, bool tracking = false)
         {
-            return _mapper.Map<IEnumerable<TDTO>>(await _service.BuscarTodos(includes));
+            return _mapper.Map<TDTO>(await _service.BuscarComPesquisa(expression, includes, tracking));
         }
 
-        public async Task<TDTO> BuscarComPesquisa(Expression<Func<T, bool>> expression, string[] includes = default)
+        public virtual async Task<IEnumerable<TDTO>> BuscarTodos(string[] includes = default, bool tracking = false)
         {
-            return _mapper.Map<TDTO>(await _service.BuscarComPesquisa(expression, includes));
+            return _mapper.Map<IEnumerable<TDTO>>(await _service.BuscarTodos(includes, tracking));
         }
 
-        public async Task<IEnumerable<TDTO>> BuscarTodosComPesquisa(Expression<Func<T, bool>> expression, string[] includes = default)
+        public virtual async Task<IEnumerable<TDTO>> BuscarTodosComPesquisa(Expression<Func<T, bool>> expression, string[] includes = default, bool tracking = false)
         {
-            return _mapper.Map<IEnumerable<TDTO>>(await _service.BuscarTodosComPesquisa(expression, includes));
+            return _mapper.Map<IEnumerable<TDTO>>(await _service.BuscarTodosComPesquisa(expression, includes, tracking));
         }
 
-        public async Task<PaginacaoModel<TDTO>> BuscarTodosPaginacao(int limit, int page, CancellationToken cancellationToken, string[] includes = null)
+        public virtual async Task<PaginacaoModel<TDTO>> BuscarTodosPaginacao(Expression<Func<T, bool>> expression, int limit, int page, CancellationToken cancellationToken, string[] includes = default, bool tracking = false)
         {
-            return _mapper.Map<PaginacaoModel<TDTO>>(await _service.BuscarTodosPaginacao(limit, page, cancellationToken, includes));
+            return _mapper.Map<PaginacaoModel<TDTO>>(await _service.BuscarTodosPaginacao(expression, limit, page, cancellationToken, includes, tracking));
         }
 
         #endregion
 
         #region Escrita
 
-        public async Task<Guid> Incluir(TDTO entidade)
+        public virtual async Task<object> Incluir(TDTO entidade)
         {
             return await _service.Incluir(_mapper.Map<T>(entidade));
         }
 
-        public async Task IncluirLista(List<TDTO> entidade)
+        public virtual async Task IncluirLista(IEnumerable<TDTO> entidades)
         {
-            await _service.IncluirLista(_mapper.Map<List<T>>(entidade));
+            await _service.IncluirLista(_mapper.Map<IEnumerable<T>>(entidades));
         }
 
-        public async Task Alterar(TDTO entidade)
+        public virtual void Alterar(TDTO entidade)
         {
-            await _service.Alterar(_mapper.Map<T>(entidade));
+            _service.Alterar(_mapper.Map<T>(entidade));
         }
 
-        public async Task<bool> Excluir(Guid id)
+        public virtual void AlterarLista(IEnumerable<TDTO> entidades)
         {
-            return await _service.Excluir(id);
+            _service.AlterarLista(_mapper.Map<IEnumerable<T>>(entidades));
+        }
+
+        public virtual async Task Excluir(object id)
+        {
+            await _service.Excluir(id);
+        }
+
+        public virtual void Excluir(T entidade)
+        {
+            _service.Excluir(entidade);
         }
 
         #endregion
-
     }
 }

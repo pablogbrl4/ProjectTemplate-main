@@ -5,13 +5,17 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using ProjectTemplate.API.Filters;
 using ProjectTemplate.Application.Mappings;
 using ProjectTemplate.Infra.Data.Contexto;
 using ProjectTemplate.Infra.IoC;
+using Serilog;
+using System;
 using System.Globalization;
+using System.IO;
 using System.Text;
 
 namespace ProjectTemplate.API
@@ -25,7 +29,6 @@ namespace ProjectTemplate.API
             Configuration = configuration;
         }
 
-
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
@@ -35,6 +38,8 @@ namespace ProjectTemplate.API
                       Configuration.GetConnectionString("BaseDatabase")));
 
             InjectorDependencies.Registrer(services);
+
+            //services.AddSingleton(Log.Logger);
             services.AddAutoMapper(x => x.AddProfile(new BaseMapping()));
             services.AddMvc();
             services.AddControllers().AddNewtonsoftJson();
@@ -69,6 +74,7 @@ namespace ProjectTemplate.API
                 c.RoutePrefix = string.Empty;
             });
 
+            app.UseHttpsRedirection();
             app.UseRouting();
             //app.UseAuthentication();
             //app.UseAuthorization();
@@ -77,6 +83,27 @@ namespace ProjectTemplate.API
             {
                 endpoints.MapControllers();
             });
+
+            try
+            {
+                app.UseStaticFiles(new StaticFileOptions
+                {
+                    FileProvider = new PhysicalFileProvider(
+                     Path.Combine(env.ContentRootPath, "logs")),
+                    RequestPath = "/logs"
+                });
+
+                app.UseDirectoryBrowser(new DirectoryBrowserOptions
+                {
+                    FileProvider = new PhysicalFileProvider(
+                    Path.Combine(env.ContentRootPath, "logs")),
+                    RequestPath = "/logs"
+                });
+            }
+            catch (Exception ex)
+            {
+                Log.Error($"Terminal - Startup.cs - Falha ao configurar logs via navegador. Erro: {ex.Message}");
+            }
         }
 
         private void ConfigureSwagger(IServiceCollection services)

@@ -25,7 +25,8 @@ namespace ProjectTemplate.Infra.Data.Repositories
         }
 
         #region Leitura
-        public IQueryable<T> Buscar(Expression<Func<T, bool>> expression, string[] includes = default, bool tracking = false)
+
+        private IQueryable<T> Buscar(Expression<Func<T, bool>> expression, string[] includes = default, bool tracking = false)
         {
             var query = _dbSet.Where(expression);
             if (tracking == false)
@@ -36,31 +37,34 @@ namespace ProjectTemplate.Infra.Data.Repositories
             return query;
         }
 
-        public virtual async Task<T> BuscarPorId(Guid id, string[] includes = default, bool tracking = false)
+        public virtual async Task<T> BuscarPorId(object id, string[] includes = default, bool tracking = false)
         {
             return await Buscar(x => x.Id == id, includes, tracking).FirstOrDefaultAsync();
         }
 
-        public virtual async Task<T> BuscarComPesquisa(Expression<Func<T, bool>> expression, string[] includes = default, bool tracking = true)
+        public virtual async Task<T> BuscarComPesquisa(Expression<Func<T, bool>> expression, string[] includes = default, bool tracking = false)
         {
             return await Buscar(expression, includes).FirstOrDefaultAsync();
         }
-       
-        public async Task<IEnumerable<T>> BuscarTodos(string[] includes = default, bool tracking = true)
+
+        public virtual async Task<IEnumerable<T>> BuscarTodos(string[] includes = default, bool tracking = false)
         {
             return await Buscar(x => true, includes).ToListAsync();
         }
 
-        public async Task<IEnumerable<T>> BuscarTodosComPesquisa(Expression<Func<T, bool>> expression, string[] includes = default, bool tracking = true)
+        public virtual async Task<IEnumerable<T>> BuscarTodosComPesquisa(Expression<Func<T, bool>> expression, string[] includes = default, bool tracking = false)
         {
             return await Buscar(expression, includes).ToListAsync();
         }
 
-        public async Task<PaginacaoModel<T>> BuscarTodosPaginacao(int limit, int page, CancellationToken cancellationToken, string[] includes = default)
+        public virtual async Task<PaginacaoModel<T>> BuscarTodosPaginacao(Expression<Func<T, bool>> expression, int limit, int page, CancellationToken cancellationToken, string[] includes = default, bool tracking = false)
         {
-            var entidades = await _dbSet
-                      .AsNoTracking()
-                      .PaginateAsync(page, limit, cancellationToken, includes);
+            PagedModel<T> entidades;
+
+            if (tracking)
+                entidades = await _dbSet.Where(expression).PaginateAsync(page, limit, cancellationToken, includes);
+            else
+                entidades = await _dbSet.Where(expression).AsNoTracking().PaginateAsync(page, limit, cancellationToken, includes);
 
             var entidadesPaginacao = new PaginacaoModel<T>
             {
@@ -77,13 +81,13 @@ namespace ProjectTemplate.Infra.Data.Repositories
 
         #region Escrita
 
-        public virtual async Task<Guid> Incluir(T entidade)
+        public virtual async Task<object> Incluir(T entidade)
         {
             var obj = await _dbSet.AddAsync(entidade);
             return obj.Entity.Id;
         }
 
-        public virtual async Task IncluirLista(List<T> entidades)
+        public virtual async Task IncluirLista(IEnumerable<T> entidades)
         {
             await _dbSet.AddRangeAsync(entidades);
         }
@@ -93,31 +97,24 @@ namespace ProjectTemplate.Infra.Data.Repositories
             _context.Entry(entidade).State = EntityState.Modified;
         }
 
-        public async Task<bool> Excluir(Guid id)
+        public virtual void AlterarLista(IEnumerable<T> entidades)
         {
-            try
+            foreach (var entidade in entidades)
             {
-                var entidade = await BuscarPorId(id);
-                if (entidade != null)
-                {
-                    _dbSet.Remove(entidade);
-                }
-                return true;
-            }
-            catch
-            {
-                return false;
+                _context.Entry(entidade).State = EntityState.Modified;
             }
         }
 
-        public async Task IniciarTransaction()
+        public virtual async Task Excluir(object id)
         {
-            await _context.IniciarTransaction();
+            var entidade = await BuscarPorId(id);
+            if (entidade != null)
+                _dbSet.Remove(entidade);
         }
 
-        public async Task SalvarMudancas(bool commit = true)
+        public virtual void Excluir(T entidade)
         {
-            await _context.SalvarMudancas(commit);
+            _dbSet.Remove(entidade);
         }
 
         #endregion

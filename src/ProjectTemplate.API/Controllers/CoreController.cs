@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using ProjectTemplate.Application.DTOs;
 using ProjectTemplate.Application.Interfaces;
+using ProjectTemplate.Application.Requests;
 using ProjectTemplate.Domain.Entities;
+using ProjectTemplate.Domain.Paginacao;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -18,10 +21,12 @@ namespace ProjectTemplate.API.Controllers
         where TDTO : BaseEntidadeDTO
     {
         protected readonly IBaseApp<T, TDTO> _app;
+        protected readonly ILogger _logger;
 
-        public CoreController(IBaseApp<T, TDTO> app)
+        public CoreController(ILogger logger, IBaseApp<T, TDTO> app)
         {
             _app = app;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -41,11 +46,24 @@ namespace ProjectTemplate.API.Controllers
 
         [HttpGet]
         [Route("pagination")]
-        public async Task<IActionResult> ListarPorPaginacao(int limit, int page, CancellationToken cancellationToken)
+        public async Task<IActionResult> ListarPorPaginacao([FromQuery] PagesClienteRequest urlQueryParameters, CancellationToken cancellationToken)
         {
             try
             {
-                var list = await _app.BuscarTodosPaginacao(limit, page, cancellationToken);
+                var list = await _app.BuscarTodosPaginacao(c => true, urlQueryParameters.Limit, urlQueryParameters.Page, cancellationToken);
+
+                if (list.PaginaAtual > 1)
+                {
+                    var prevRoute = $"/api/clientes?limit={urlQueryParameters.Limit}&page={urlQueryParameters.Page - 1}";
+                    list.AddResourceLink(LinkedResourceType.Prev, prevRoute);
+                }
+
+                if (list.PaginaAtual < list.TotalPaginas)
+                {
+                    var nextRoute = $"/api/clientes?limit={urlQueryParameters.Limit}&page={urlQueryParameters.Page + 1}";
+                    list.AddResourceLink(LinkedResourceType.Next, nextRoute);
+                }
+
                 return new OkObjectResult(list);
             }
             catch (Exception ex)
@@ -56,7 +74,7 @@ namespace ProjectTemplate.API.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        public async Task<IActionResult> SelecionarPorId(Guid id)
+        public async Task<IActionResult> SelecionarPorId(object id)
         {
             try
             {
@@ -101,7 +119,7 @@ namespace ProjectTemplate.API.Controllers
         {
             try
             {
-                await _app.Alterar(dado);
+                _app.Alterar(dado);
                 return new OkObjectResult(true);
             }
             catch (Exception ex)
@@ -112,7 +130,7 @@ namespace ProjectTemplate.API.Controllers
 
         [HttpPatch]
         [Route("{id}")]
-        public async Task<IActionResult> Patch(Guid id, [FromBody] JsonPatchDocument<TDTO> patchEntity)
+        public async Task<IActionResult> Patch(object id, [FromBody] JsonPatchDocument<TDTO> patchEntity)
         {
             try
             {
@@ -125,7 +143,7 @@ namespace ProjectTemplate.API.Controllers
 
                 patchEntity.ApplyTo(objEntity, ModelState);
 
-                await _app.Alterar(objEntity);
+                _app.Alterar(objEntity);
 
                 return new OkObjectResult(true);
             }
@@ -137,7 +155,7 @@ namespace ProjectTemplate.API.Controllers
 
         [HttpDelete]
         [Route("{id}")]
-        public async Task<IActionResult> Excluir(Guid id)
+        public async Task<IActionResult> Excluir(object id)
         {
             try
             {

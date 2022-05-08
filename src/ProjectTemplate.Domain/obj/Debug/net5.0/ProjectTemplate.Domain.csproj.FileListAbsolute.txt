@@ -21,3 +21,14 @@ C:\Users\Eddy Moura\Documents\0 - Plural\ProjectTemplate-main\src\ProjectTemplat
 C:\Users\Eddy Moura\Documents\0 - Plural\ProjectTemplate-main\src\ProjectTemplate.Domain\obj\Debug\net5.0\ProjectTemplate.Domain.dll
 C:\Users\Eddy Moura\Documents\0 - Plural\ProjectTemplate-main\src\ProjectTemplate.Domain\obj\Debug\net5.0\ref\ProjectTemplate.Domain.dll
 C:\Users\Eddy Moura\Documents\0 - Plural\ProjectTemplate-main\src\ProjectTemplate.Domain\obj\Debug\net5.0\ProjectTemplate.Domain.pdb
+C:\Users\nugnu\Documents\0 - Plural IT\ProjectTemplate-main\src\ProjectTemplate.Domain\bin\Debug\net5.0\ProjectTemplate.Domain.deps.json
+C:\Users\nugnu\Documents\0 - Plural IT\ProjectTemplate-main\src\ProjectTemplate.Domain\bin\Debug\net5.0\ProjectTemplate.Domain.dll
+C:\Users\nugnu\Documents\0 - Plural IT\ProjectTemplate-main\src\ProjectTemplate.Domain\bin\Debug\net5.0\ref\ProjectTemplate.Domain.dll
+C:\Users\nugnu\Documents\0 - Plural IT\ProjectTemplate-main\src\ProjectTemplate.Domain\bin\Debug\net5.0\ProjectTemplate.Domain.pdb
+C:\Users\nugnu\Documents\0 - Plural IT\ProjectTemplate-main\src\ProjectTemplate.Domain\obj\Debug\net5.0\ProjectTemplate.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\nugnu\Documents\0 - Plural IT\ProjectTemplate-main\src\ProjectTemplate.Domain\obj\Debug\net5.0\ProjectTemplate.Domain.AssemblyInfoInputs.cache
+C:\Users\nugnu\Documents\0 - Plural IT\ProjectTemplate-main\src\ProjectTemplate.Domain\obj\Debug\net5.0\ProjectTemplate.Domain.AssemblyInfo.cs
+C:\Users\nugnu\Documents\0 - Plural IT\ProjectTemplate-main\src\ProjectTemplate.Domain\obj\Debug\net5.0\ProjectTemplate.Domain.csproj.CoreCompileInputs.cache
+C:\Users\nugnu\Documents\0 - Plural IT\ProjectTemplate-main\src\ProjectTemplate.Domain\obj\Debug\net5.0\ProjectTemplate.Domain.dll
+C:\Users\nugnu\Documents\0 - Plural IT\ProjectTemplate-main\src\ProjectTemplate.Domain\obj\Debug\net5.0\ref\ProjectTemplate.Domain.dll
+C:\Users\nugnu\Documents\0 - Plural IT\ProjectTemplate-main\src\ProjectTemplate.Domain\obj\Debug\net5.0\ProjectTemplate.Domain.pdb

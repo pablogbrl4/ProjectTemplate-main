@@ -2,7 +2,6 @@
 using ProjectTemplate.Domain.Paginacao;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,33 +11,33 @@ namespace ProjectTemplate.Domain.Interfaces.Repositories
     public interface IBaseRepositorio<T> where T : BaseEntidade
     {
         #region Escrita
-        Task<Guid> Incluir(T entidade);
 
-        Task IncluirLista(List<T> entidade);
+        Task<object> Incluir(T entidade);
+
+        Task IncluirLista(IEnumerable<T> entidades);
 
         void Alterar(T entidade);
 
-        Task<bool> Excluir(Guid id);
+        void AlterarLista(IEnumerable<T> entidades);
 
-        Task IniciarTransaction();
+        Task Excluir(object id);
 
-        Task SalvarMudancas(bool commit = true);
-        #endregion
+        void Excluir(T entidade);
+
+        #endregion Escrita
 
         #region Leitura
 
-        IQueryable<T> Buscar(Expression<Func<T, bool>> expression, string[] includes = default, bool tracking = true);
+        Task<T> BuscarPorId(object id, string[] includes = default, bool tracking = false);
 
-        Task<T> BuscarPorId(Guid id, string[] includes = default, bool tracking = true);
+        Task<T> BuscarComPesquisa(Expression<Func<T, bool>> expression, string[] includes = default, bool tracking = false);
 
-        Task<T> BuscarComPesquisa(Expression<Func<T, bool>> expression, string[] includes = default, bool tracking = true);
-      
-        Task<IEnumerable<T>> BuscarTodos(string[] includes = default, bool tracking = true);
+        Task<IEnumerable<T>> BuscarTodos(string[] includes = default, bool tracking = false);
 
-        Task<IEnumerable<T>> BuscarTodosComPesquisa(Expression<Func<T, bool>> expression, string[] includes, bool tracking = true);
+        Task<IEnumerable<T>> BuscarTodosComPesquisa(Expression<Func<T, bool>> expression, string[] includes = default, bool tracking = false);
 
-        Task<PaginacaoModel<T>> BuscarTodosPaginacao(int limit, int page, CancellationToken cancellationToken, string[] includes = default);
+        Task<PaginacaoModel<T>> BuscarTodosPaginacao(Expression<Func<T, bool>> expression, int limit,int page,CancellationToken cancellationToken,string[] includes = default,bool tracking = false);
 
-        #endregion
+        #endregion Leitura
     }
 }

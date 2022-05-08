@@ -22,11 +22,11 @@ namespace ProjectTemplate.Infra.Data.Contexto
             return _contextoTransaction;
         }
 
-
-        private async Task RollBack()
+        public async Task SalvarMudancas(bool commit = true)
         {
-            if (_contextoTransaction != null)
-                await _contextoTransaction.RollbackAsync();
+            await Salvar();
+            if (commit)
+                await Commit();
         }
 
         private async Task Salvar()
@@ -43,6 +43,12 @@ namespace ProjectTemplate.Infra.Data.Contexto
             }
         }
 
+        private async Task RollBack()
+        {
+            if (_contextoTransaction != null)
+                await _contextoTransaction.RollbackAsync();
+        }
+
         private async Task Commit()
         {
             if (_contextoTransaction != null)
@@ -51,13 +57,6 @@ namespace ProjectTemplate.Infra.Data.Contexto
                 await _contextoTransaction.DisposeAsync();
                 _contextoTransaction = null;
             }
-        }
-
-        public async Task SalvarMudancas(bool commit = true)
-        {
-            await Salvar();
-            if (commit)
-                await Commit();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

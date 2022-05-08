@@ -12,25 +12,29 @@ namespace ProjectTemplate.Application.Interfaces
     public interface IBaseApp<T, TDTO> where T : BaseEntidade where TDTO : BaseEntidadeDTO
     {
         #region Escrita
-        Task<Guid> Incluir(TDTO entidade);
+        Task<object> Incluir(TDTO entidade);
 
-        Task IncluirLista(List<TDTO> entidade);
+        Task IncluirLista(IEnumerable<TDTO> entidades);
 
-        Task Alterar(TDTO entidade);
+        void Alterar(TDTO entidade);
 
-        Task<bool> Excluir(Guid id);
+        void AlterarLista(IEnumerable<TDTO> entidades);
+
+        Task Excluir(object id);
+
+        void Excluir(T entidade);
         #endregion
 
         #region Leitura
-        Task<TDTO> BuscarPorId(Guid id);
+        Task<TDTO> BuscarPorId(object id, string[] includes = default, bool tracking = false);
 
-        Task<IEnumerable<TDTO>> BuscarTodos(string[] includes = default);
+        Task<TDTO> BuscarComPesquisa(Expression<Func<T, bool>> expression, string[] includes = default, bool tracking = false);
 
-        Task<TDTO> BuscarComPesquisa(Expression<Func<T, bool>> expression, string[] includes = default);
+        Task<IEnumerable<TDTO>> BuscarTodos(string[] includes = default, bool tracking = false);
 
-        Task<IEnumerable<TDTO>> BuscarTodosComPesquisa(Expression<Func<T, bool>> expression, string[] includes = default);
+        Task<IEnumerable<TDTO>> BuscarTodosComPesquisa(Expression<Func<T, bool>> expression, string[] includes = default, bool tracking = false);
 
-        Task<PaginacaoModel<TDTO>> BuscarTodosPaginacao(int limit, int page, CancellationToken cancellationToken, string[] includes = default);
+        Task<PaginacaoModel<TDTO>> BuscarTodosPaginacao(Expression<Func<T, bool>> expression, int limit, int page, CancellationToken cancellationToken, string[] includes = default, bool tracking = false);
         #endregion
     }
 }
