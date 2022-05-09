@@ -1,8 +1,8 @@
-﻿using ProjectTemplate.Infra.Data.Contexto;
+﻿using Orizon.Rest.Chat.Infra.Data.Contexto;
 using System;
 using System.Threading.Tasks;
 
-namespace ProjectTemplate.Infra.Data.UnitOfWork
+namespace Orizon.Rest.Chat.Infra.Data.UnitOfWork
 {
     public class UnitOfWork : IUnitOfWork
     {

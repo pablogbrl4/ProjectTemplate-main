@@ -22,8 +22,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ProjectTemplate.Application\ProjectTemplate.Application.csproj" />
-    <ProjectReference Include="..\ProjectTemplate.Infra.IoC\ProjectTemplate.Infra.IoC.csproj" />
+    <ProjectReference Include="..\ProjectTemplate.Application\Orizon.Rest.Chat.Application.csproj" />
+    <ProjectReference Include="..\ProjectTemplate.Infra.IoC\Orizon.Rest.Chat.Infra.IoC.csproj" />
   </ItemGroup>
 
   <ItemGroup>

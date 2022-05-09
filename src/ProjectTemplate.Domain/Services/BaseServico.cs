@@ -1,14 +1,14 @@
-﻿using ProjectTemplate.Domain.Entities;
-using ProjectTemplate.Domain.Interfaces.Repositories;
-using ProjectTemplate.Domain.Interfaces.Services;
-using ProjectTemplate.Domain.Paginacao;
+﻿using Orizon.Rest.Chat.Domain.Entities;
+using Orizon.Rest.Chat.Domain.Interfaces.Repositories;
+using Orizon.Rest.Chat.Domain.Interfaces.Services;
+using Orizon.Rest.Chat.Domain.Paginacao;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ProjectTemplate.Domain.Services
+namespace Orizon.Rest.Chat.Domain.Services
 {
     public class BaseServico<T> : IBaseServico<T> where T : BaseEntidade
     {

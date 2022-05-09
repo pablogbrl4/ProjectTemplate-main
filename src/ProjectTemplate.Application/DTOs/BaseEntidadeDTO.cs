@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ProjectTemplate.Application.DTOs
+namespace Orizon.Rest.Chat.Application.DTOs
 {
     public abstract class BaseEntidadeDTO
     {

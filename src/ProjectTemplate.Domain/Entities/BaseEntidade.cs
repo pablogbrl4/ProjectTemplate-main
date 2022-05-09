@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ProjectTemplate.Domain.Entities
+namespace Orizon.Rest.Chat.Domain.Entities
 {
     public abstract class BaseEntidade
     {

@@ -4,7 +4,7 @@ using Serilog;
 using Serilog.Formatting.Compact;
 using System;
 
-namespace ProjectTemplate.API
+namespace Orizon.Rest.Chat.API
 {
     public class Program
     {

@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ProjectTemplate.Domain.Entities;
-using ProjectTemplate.Domain.Interfaces.Repositories;
-using ProjectTemplate.Domain.Paginacao;
-using ProjectTemplate.Infra.Data.Contexto;
+using Orizon.Rest.Chat.Domain.Entities;
+using Orizon.Rest.Chat.Domain.Interfaces.Repositories;
+using Orizon.Rest.Chat.Domain.Paginacao;
+using Orizon.Rest.Chat.Infra.Data.Contexto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 
-namespace ProjectTemplate.Infra.Data.Repositories
+namespace Orizon.Rest.Chat.Infra.Data.Repositories
 {
     public class BaseRepositorio<T> : IBaseRepositorio<T> where T : BaseEntidade
     {

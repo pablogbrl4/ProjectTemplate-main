@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ProjectTemplate.Domain.Paginacao
+namespace Orizon.Rest.Chat.Domain.Paginacao
 {
     public static class LinkedResourceExtension
     {

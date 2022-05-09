@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using Moq;
-using ProjectTemplate.Application.DTOs;
-using ProjectTemplate.Application.Services;
-using ProjectTemplate.Domain.Entities;
-using ProjectTemplate.Domain.Interfaces.Services;
-using ProjectTemplate.Domain.Paginacao;
+using Orizon.Rest.Chat.Application.DTOs;
+using Orizon.Rest.Chat.Application.Services;
+using Orizon.Rest.Chat.Domain.Entities;
+using Orizon.Rest.Chat.Domain.Interfaces.Services;
+using Orizon.Rest.Chat.Domain.Paginacao;
 using System.Collections.Generic;
 using Xunit;
 

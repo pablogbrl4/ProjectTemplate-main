@@ -1,17 +1,17 @@
 ﻿using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using ProjectTemplate.Application.DTOs;
-using ProjectTemplate.Application.Interfaces;
-using ProjectTemplate.Application.Requests;
-using ProjectTemplate.Domain.Entities;
-using ProjectTemplate.Domain.Paginacao;
+using Orizon.Rest.Chat.Application.DTOs;
+using Orizon.Rest.Chat.Application.Interfaces;
+using Orizon.Rest.Chat.Application.Requests;
+using Orizon.Rest.Chat.Domain.Entities;
+using Orizon.Rest.Chat.Domain.Paginacao;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ProjectTemplate.API.Controllers
+namespace Orizon.Rest.Chat.API.Controllers
 {
     [Produces("application/json")]
     [Route("api/[controller]")]

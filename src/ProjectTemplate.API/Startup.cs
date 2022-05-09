@@ -8,17 +8,17 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using ProjectTemplate.API.Filters;
-using ProjectTemplate.Application.Mappings;
-using ProjectTemplate.Infra.Data.Contexto;
-using ProjectTemplate.Infra.IoC;
+using Orizon.Rest.Chat.API.Filters;
+using Orizon.Rest.Chat.Application.Mappings;
+using Orizon.Rest.Chat.Infra.Data.Contexto;
+using Orizon.Rest.Chat.Infra.IoC;
 using Serilog;
 using System;
 using System.Globalization;
 using System.IO;
 using System.Text;
 
-namespace ProjectTemplate.API
+namespace Orizon.Rest.Chat.API
 {
     public class Startup
     {

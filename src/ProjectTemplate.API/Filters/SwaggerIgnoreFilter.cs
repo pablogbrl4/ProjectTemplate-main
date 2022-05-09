@@ -4,7 +4,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 
-namespace ProjectTemplate.API.Filters
+namespace Orizon.Rest.Chat.API.Filters
 {
     public class SwaggerJsonIgnoreFilter : IOperationFilter
     {

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Threading.Tasks;
 
-namespace ProjectTemplate.Infra.Data.Contexto
+namespace Orizon.Rest.Chat.Infra.Data.Contexto
 {
     public class BaseContexto : DbContext
     {

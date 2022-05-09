@@ -1,4 +1,4 @@
-﻿namespace ProjectTemplate.Application.Requests
+﻿namespace Orizon.Rest.Chat.Application.Requests
 {
     public class PagesClienteRequest
     {

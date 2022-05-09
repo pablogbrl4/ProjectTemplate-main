@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\ProjectTemplate.API\ProjectTemplate.API.csproj" />
+    <ProjectReference Include="..\src\ProjectTemplate.API\Orizon.Rest.Chat.API.csproj" />
   </ItemGroup>
 
 </Project>

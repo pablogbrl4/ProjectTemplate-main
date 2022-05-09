@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ProjectTemplate.Infra.Data.Contexto;
+using Orizon.Rest.Chat.Infra.Data.Contexto;
 using System;
 using Xunit;
 

@@ -1,12 +1,12 @@
-﻿using ProjectTemplate.Domain.Entities;
-using ProjectTemplate.Domain.Paginacao;
+﻿using Orizon.Rest.Chat.Domain.Entities;
+using Orizon.Rest.Chat.Domain.Paginacao;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ProjectTemplate.Domain.Interfaces.Repositories
+namespace Orizon.Rest.Chat.Domain.Interfaces.Repositories
 {
     public interface IBaseRepositorio<T> where T : BaseEntidade
     {

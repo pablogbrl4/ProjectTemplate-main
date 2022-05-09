@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace ProjectTemplate.Infra.Data.UnitOfWork
+namespace Orizon.Rest.Chat.Infra.Data.UnitOfWork
 {
     public interface IUnitOfWork : IDisposable
     {

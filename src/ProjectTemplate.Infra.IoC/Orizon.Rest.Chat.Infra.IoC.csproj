@@ -9,8 +9,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ProjectTemplate.Application\ProjectTemplate.Application.csproj" />
-    <ProjectReference Include="..\ProjectTemplate.Infra.Data\ProjectTemplate.Infra.Data.csproj" />
+    <ProjectReference Include="..\ProjectTemplate.Application\Orizon.Rest.Chat.Application.csproj" />
+    <ProjectReference Include="..\ProjectTemplate.Infra.Data\Orizon.Rest.Chat.Infra.Data.csproj" />
   </ItemGroup>
 
 </Project>

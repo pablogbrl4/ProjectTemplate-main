@@ -1,16 +1,16 @@
 ﻿using AutoMapper;
-using ProjectTemplate.Application.DTOs;
-using ProjectTemplate.Application.Interfaces;
-using ProjectTemplate.Domain.Entities;
-using ProjectTemplate.Domain.Interfaces.Services;
-using ProjectTemplate.Domain.Paginacao;
+using Orizon.Rest.Chat.Application.DTOs;
+using Orizon.Rest.Chat.Application.Interfaces;
+using Orizon.Rest.Chat.Domain.Entities;
+using Orizon.Rest.Chat.Domain.Interfaces.Services;
+using Orizon.Rest.Chat.Domain.Paginacao;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ProjectTemplate.Application.Services
+namespace Orizon.Rest.Chat.Application.Services
 {
     public class BaseServicoApp<T, TDTO> : IBaseApp<T, TDTO>
          where T : BaseEntidade

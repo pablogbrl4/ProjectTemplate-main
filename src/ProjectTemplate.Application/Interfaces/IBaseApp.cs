@@ -1,13 +1,13 @@
-﻿using ProjectTemplate.Application.DTOs;
-using ProjectTemplate.Domain.Entities;
-using ProjectTemplate.Domain.Paginacao;
+﻿using Orizon.Rest.Chat.Application.DTOs;
+using Orizon.Rest.Chat.Domain.Entities;
+using Orizon.Rest.Chat.Domain.Paginacao;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ProjectTemplate.Application.Interfaces
+namespace Orizon.Rest.Chat.Application.Interfaces
 {
     public interface IBaseApp<T, TDTO> where T : BaseEntidade where TDTO : BaseEntidadeDTO
     {

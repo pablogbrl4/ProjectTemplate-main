@@ -1,8 +1,8 @@
 ﻿using Moq;
-using ProjectTemplate.Domain.Entities;
-using ProjectTemplate.Domain.Interfaces.Repositories;
-using ProjectTemplate.Domain.Paginacao;
-using ProjectTemplate.Domain.Services;
+using Orizon.Rest.Chat.Domain.Entities;
+using Orizon.Rest.Chat.Domain.Interfaces.Repositories;
+using Orizon.Rest.Chat.Domain.Paginacao;
+using Orizon.Rest.Chat.Domain.Services;
 using System.Collections.Generic;
 using Xunit;
 

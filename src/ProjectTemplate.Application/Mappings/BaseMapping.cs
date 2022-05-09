@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 
-namespace ProjectTemplate.Application.Mappings
+namespace Orizon.Rest.Chat.Application.Mappings
 {
     public class BaseMapping : Profile
     {

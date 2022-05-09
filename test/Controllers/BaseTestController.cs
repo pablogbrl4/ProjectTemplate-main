@@ -1,11 +1,11 @@
 ﻿using Microsoft.Extensions.Logging;
 using Moq;
-using ProjectTemplate.API.Controllers;
-using ProjectTemplate.Application.DTOs;
-using ProjectTemplate.Application.Interfaces;
-using ProjectTemplate.Application.Requests;
-using ProjectTemplate.Domain.Entities;
-using ProjectTemplate.Domain.Paginacao;
+using Orizon.Rest.Chat.API.Controllers;
+using Orizon.Rest.Chat.Application.DTOs;
+using Orizon.Rest.Chat.Application.Interfaces;
+using Orizon.Rest.Chat.Application.Requests;
+using Orizon.Rest.Chat.Domain.Entities;
+using Orizon.Rest.Chat.Domain.Paginacao;
 using System.Collections.Generic;
 using Xunit;
 

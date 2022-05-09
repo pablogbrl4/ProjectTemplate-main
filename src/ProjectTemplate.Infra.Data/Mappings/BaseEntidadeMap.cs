@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using ProjectTemplate.Domain.Entities;
+using Orizon.Rest.Chat.Domain.Entities;
 
-namespace ProjectTemplate.Infra.Data.Mappings
+namespace Orizon.Rest.Chat.Infra.Data.Mappings
 {
     public class BaseEntidadeMap<T> : IEntityTypeConfiguration<T>
            where T : BaseEntidade

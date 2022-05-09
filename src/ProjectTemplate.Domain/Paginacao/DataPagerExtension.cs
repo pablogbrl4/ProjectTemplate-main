@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ProjectTemplate.Domain.Paginacao
+namespace Orizon.Rest.Chat.Domain.Paginacao
 {
     public static class DataPagerExtension
     {

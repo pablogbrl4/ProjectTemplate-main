@@ -1,13 +1,13 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using ProjectTemplate.Application.Interfaces;
-using ProjectTemplate.Application.Services;
-using ProjectTemplate.Domain.Interfaces.Repositories;
-using ProjectTemplate.Domain.Interfaces.Services;
-using ProjectTemplate.Domain.Services;
-using ProjectTemplate.Infra.Data.Repositories;
-using ProjectTemplate.Infra.Data.UnitOfWork;
+using Orizon.Rest.Chat.Application.Interfaces;
+using Orizon.Rest.Chat.Application.Services;
+using Orizon.Rest.Chat.Domain.Interfaces.Repositories;
+using Orizon.Rest.Chat.Domain.Interfaces.Services;
+using Orizon.Rest.Chat.Domain.Services;
+using Orizon.Rest.Chat.Infra.Data.Repositories;
+using Orizon.Rest.Chat.Infra.Data.UnitOfWork;
 
-namespace ProjectTemplate.Infra.IoC
+namespace Orizon.Rest.Chat.Infra.IoC
 {
     public static class InjectorDependencies
     {
