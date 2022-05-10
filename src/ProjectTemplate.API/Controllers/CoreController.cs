@@ -40,21 +40,7 @@ namespace Orizon.Rest.Chat.API.Controllers
         {
             try
             {
-                var list = await _app.BuscarTodosPaginacao(c => true, urlQueryParameters.Limit, urlQueryParameters.Page, cancellationToken);
-
-                if (list.PaginaAtual > 1)
-                {
-                    var prevRoute = $"/api/clientes?limit={urlQueryParameters.Limit}&page={urlQueryParameters.Page - 1}";
-                    list.AddResourceLink(LinkedResourceType.Prev, prevRoute);
-                }
-
-                if (list.PaginaAtual < list.TotalPaginas)
-                {
-                    var nextRoute = $"/api/clientes?limit={urlQueryParameters.Limit}&page={urlQueryParameters.Page + 1}";
-                    list.AddResourceLink(LinkedResourceType.Next, nextRoute);
-                }
-
-                return new OkObjectResult(list);
+                return new OkObjectResult(true);
             }
             catch (Exception ex)
             {
@@ -68,8 +54,7 @@ namespace Orizon.Rest.Chat.API.Controllers
         {
             try
             {
-                var objById = await _app.BuscarPorId(id);
-                return new OkObjectResult(objById);
+                return new OkObjectResult(true);
             }
             catch (Exception ex)
             {
@@ -87,10 +72,7 @@ namespace Orizon.Rest.Chat.API.Controllers
         {
             try
             {
-                await _app.IniciarTransaction();
-                var id = await _app.Incluir(dado);
-                await _app.SalvarMudancas();
-                return new OkObjectResult(id);
+                return new OkObjectResult(null);
             }
             catch (Exception ex)
             {
@@ -104,9 +86,6 @@ namespace Orizon.Rest.Chat.API.Controllers
         {
             try
             {
-                await _app.IniciarTransaction();
-                await _app.IncluirLista(dados);
-                await _app.SalvarMudancas();
                 return new OkObjectResult(true);
             }
             catch (Exception ex)
@@ -121,9 +100,6 @@ namespace Orizon.Rest.Chat.API.Controllers
         {
             try
             {
-                await _app.IniciarTransaction();
-                _app.Alterar(dado);
-                await _app.SalvarMudancas();
                 return new OkObjectResult(true);
             }
             catch (Exception ex)
@@ -138,9 +114,6 @@ namespace Orizon.Rest.Chat.API.Controllers
         {
             try
             {
-                await _app.IniciarTransaction();
-                _app.AlterarLista(dados);
-                await _app.SalvarMudancas();
                 return new OkObjectResult(true);
             }
             catch (Exception ex)
@@ -155,17 +128,6 @@ namespace Orizon.Rest.Chat.API.Controllers
         {
             try
             {
-                var objEntity = await _app.BuscarPorId(id);
-
-                if (objEntity == null)
-                    return NotFound();
-
-                patchEntity.ApplyTo(objEntity, ModelState);
-
-                await _app.IniciarTransaction();
-                _app.Alterar(objEntity);
-                await _app.SalvarMudancas();
-
                 return new OkObjectResult(true);
             }
             catch (Exception ex)
@@ -180,9 +142,6 @@ namespace Orizon.Rest.Chat.API.Controllers
         {
             try
             {
-                await _app.IniciarTransaction();
-                await _app.Excluir(id);
-                await _app.SalvarMudancas();
                 return new OkObjectResult(true);
             }
             catch (Exception ex)

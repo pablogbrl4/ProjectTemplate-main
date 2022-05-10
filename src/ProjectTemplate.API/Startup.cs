@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Localization;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
@@ -11,6 +10,7 @@ using Microsoft.OpenApi.Models;
 using Orizon.Rest.Chat.API.Filters;
 using Orizon.Rest.Chat.Application.Mappings;
 using Orizon.Rest.Chat.Infra.Data.Contexto;
+using Orizon.Rest.Chat.Infra.Data.Provider;
 using Orizon.Rest.Chat.Infra.IoC;
 using Serilog;
 using System;
@@ -32,12 +32,7 @@ namespace Orizon.Rest.Chat.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddEntityFrameworkSqlServer()
-              .AddDbContext<BaseContexto>(
-                  options => options.UseSqlServer(
-                      Configuration.GetConnectionString("BaseDatabase")));
-
-            InjectorDependencies.Registrer(services);
+            InjectorDependencies.Registrer(services, Configuration);
 
             //services.AddSingleton(Log.Logger);
             services.AddAutoMapper(x => x.AddProfile(new BaseMapping()));

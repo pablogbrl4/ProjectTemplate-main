@@ -56,7 +56,7 @@ namespace Tests.Services
                 TotalPaginas = 10
             };
 
-            _moqApp.Setup(_ => _.BuscarTodosPaginacao(c => true, 100, 1, default, default, false));
+            //_moqApp.Setup(_ => _.BuscarTodosPaginacao(c => true, 100, 1, default, default, false));
         }
     }
 }

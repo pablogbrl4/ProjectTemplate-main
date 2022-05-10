@@ -4,9 +4,12 @@ using Orizon.Rest.Chat.Infra.Data.Contexto;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Orizon.Rest.Chat.Infra.Data.Repositories
 {
+    [ExcludeFromCodeCoverage]
+
     public class ChatConversasRepository : IChatConversasRepository
     {
         private static readonly string AuditorTitulo = "Analista";

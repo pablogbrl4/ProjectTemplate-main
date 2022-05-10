@@ -3,9 +3,12 @@ using Orizon.Rest.Chat.Domain.Interfaces.Repositories;
 using Orizon.Rest.Chat.Infra.Data.Contexto;
 using System;
 using System.Data;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Orizon.Rest.Chat.Infra.Data.Repositories
 {
+    [ExcludeFromCodeCoverage]
+
     public class ApontamentoRepository : IApontamentoRepository
     {
         private readonly PrefatDbContext _prefatDbContext;

@@ -1,44 +1,49 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Orizon.Rest.Chat.Application.Interfaces;
 using Orizon.Rest.Chat.Application.Services;
 using Orizon.Rest.Chat.Domain.Interfaces.Repositories;
 using Orizon.Rest.Chat.Domain.Interfaces.Services;
 using Orizon.Rest.Chat.Domain.Services;
+using Orizon.Rest.Chat.Infra.Data.Contexto;
+using Orizon.Rest.Chat.Infra.Data.Provider;
 using Orizon.Rest.Chat.Infra.Data.Repositories;
-using Orizon.Rest.Chat.Infra.Data.UnitOfWork;
 
 namespace Orizon.Rest.Chat.Infra.IoC
 {
     public static class InjectorDependencies
     {
-        public static void Registrer(IServiceCollection services)
+        public static void Registrer(IServiceCollection services, IConfiguration configuration)
         {
+            // Context
+            services.AddSingleton(new DativaDbContext(new SqlConnectionProvider(), configuration.GetConnectionString("Dativa")));
+            services.AddSingleton(new FaturiFeDbContext(new SqlConnectionProvider(), configuration.GetConnectionString("FaturiFe")));
+            services.AddSingleton(new PrefatDbContext(new SqlConnectionProvider(), configuration.GetConnectionString("PreFaturamento")));
+
             //Application
-            services.AddTransient(typeof(IBaseApp<,>), typeof(BaseServicoApp<,>));
-            services.AddTransient<IApontamentoApp, ApontamentoApp>();
-            services.AddTransient<IChatApp, ChatApp>();
-            services.AddTransient<IChatConversasApp, ChatConversasApp>();
-            services.AddTransient<ICicloAuditoriaApp, CicloAuditoriaApp>();
-            services.AddTransient<IDadosAuditorApp, DadosAuditorApp>();
-            services.AddTransient<IProxyApp, ProxyApp>();
+            services.AddScoped(typeof(IBaseApp<,>), typeof(BaseServicoApp<,>));
+            services.AddScoped<IApontamentoApp, ApontamentoApp>();
+            services.AddScoped<IChatApp, ChatApp>();
+            services.AddScoped<IChatConversasApp, ChatConversasApp>();
+            services.AddScoped<ICicloAuditoriaApp, CicloAuditoriaApp>();
+            services.AddScoped<IDadosAuditorApp, DadosAuditorApp>();
+            services.AddScoped<IProxyApp, ProxyApp>();
 
             //Domínio
-            services.AddTransient(typeof(IBaseServico<>), typeof(BaseServico<>));
-            services.AddTransient<IApontamentoService, ApontamentoService>();
-            services.AddTransient<IChatService, ChatService>();
-            services.AddTransient<IChatConversasService, ChatConversasService>();
-            services.AddTransient<ICicloAuditoriaService, CicloAuditoriaService>();
-            services.AddTransient<IDadosAuditorService, DadosAuditorService>();
+            services.AddScoped(typeof(IBaseServico<>), typeof(BaseServico<>));
+            services.AddScoped<IApontamentoService, ApontamentoService>();
+            services.AddScoped<IChatService, ChatService>();
+            services.AddScoped<IChatConversasService, ChatConversasService>();
+            services.AddScoped<ICicloAuditoriaService, CicloAuditoriaService>();
+            services.AddScoped<IDadosAuditorService, DadosAuditorService>();
 
             //Repositorio
-            services.AddTransient(typeof(IBaseRepositorio<>), typeof(BaseRepositorio<>));
-            services.AddTransient<IApontamentoRepository, ApontamentoRepository>();
-            services.AddTransient<IChatRepository, ChatRepository>();
-            services.AddTransient<IChatConversasRepository, ChatConversasRepository>();
-            services.AddTransient<ICicloAuditoriaRepository, CicloAuditoriaRepository>();
-            services.AddTransient<IDadosAuditorRepository, DadosAuditorRepository>();
-
-            services.AddTransient<IUnitOfWork, UnitOfWork>();
+            services.AddScoped(typeof(IBaseRepositorio<>), typeof(BaseRepositorio<>));
+            services.AddScoped<IApontamentoRepository, ApontamentoRepository>();
+            services.AddScoped<IChatRepository, ChatRepository>();
+            services.AddScoped<IChatConversasRepository, ChatConversasRepository>();
+            services.AddScoped<ICicloAuditoriaRepository, CicloAuditoriaRepository>();
+            services.AddScoped<IDadosAuditorRepository, DadosAuditorRepository>();
         }
     }
 }

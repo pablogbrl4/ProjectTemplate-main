@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,8 +13,7 @@ namespace Orizon.Rest.Chat.Domain.Paginacao
         {
 
             if (includes != null)
-                foreach (var property in includes)
-                    query = query.Include(property);
+                foreach (var property in includes);
 
             var paged = new PagedModel<TModel>();
 
@@ -24,13 +22,13 @@ namespace Orizon.Rest.Chat.Domain.Paginacao
             paged.CurrentPage = page;
             paged.PageSize = limit;
 
-            var totalItemsCountTask = await query.CountAsync(cancellationToken);
+            //var totalItemsCountTask = await query.CountAsync(cancellationToken);
 
             var startRow = (page - 1) * limit;
 
-            paged.Items = await query.Skip(startRow).Take(limit).ToListAsync(cancellationToken);
+            //paged.Items = await query.Skip(startRow).Take(limit).ToListAsync(cancellationToken);
 
-            paged.TotalItems = totalItemsCountTask;
+            //paged.TotalItems = totalItemsCountTask;
             paged.TotalPages = (int)Math.Ceiling(paged.TotalItems / (double)limit);
 
             return paged;

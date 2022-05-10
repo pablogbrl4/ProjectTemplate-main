@@ -5,9 +5,12 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using Orizon.Rest.Chat.Utilities;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Orizon.Rest.Chat.Infra.Data.Repositories
 {
+    [ExcludeFromCodeCoverage]
+
     public class ChatRepository : IChatRepository
     {
         public int Insert(int idLogin)

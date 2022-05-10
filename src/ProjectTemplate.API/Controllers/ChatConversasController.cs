@@ -15,6 +15,9 @@ namespace Orizon.Rest.Chat.API.Controllers
     //    LogHeaders = new string[] { },
     //    LogJwtClaims = new string[] { "idComprador", "idPrestador", "nomeUsuario" }
     //)]
+    [Produces("application/json")]
+    [Route("api/[controller]")]
+    [ApiController]
     public class ChatConversasController : Controller
     {
         private HttpRequestMessage Request;
@@ -55,6 +58,7 @@ namespace Orizon.Rest.Chat.API.Controllers
         /// <param name="fkChat">O identificador do Chat.</param>
         /// <returns>Lista de mensagens.</returns>
         [HttpGet]
+        [Route("")]
         //[SwaggerResponse(200, "Ok", typeof(ChatConversasModel))]
         //[SwaggerOperation(operationId: "Chat_Conversas")]
         public IActionResult Get(int fkChat)
@@ -89,6 +93,8 @@ namespace Orizon.Rest.Chat.API.Controllers
         /// <returns>Retorna #0 em caso de sucesso, #-1 caso contrário.</returns>
         //[SwaggerResponse(200, "Ok", typeof(int))]
         //[SwaggerOperation(operationId: "Chat_Conversas")]
+        [HttpPost]
+        [Route("")]
         public async Task<int> Post(Mensagem mensagem)
         {
             Log.Debug(" *********ChatConversasController - Post Iniciado*********");
@@ -155,6 +161,7 @@ namespace Orizon.Rest.Chat.API.Controllers
         //[SwaggerResponse(200, "Ok", typeof(int))]
         //[SwaggerOperation(operationId: "Chat_Conversas")]
         [HttpPut]
+        [Route("")]
         public int Put(Mensagem mensagem)
         {
             Log.Debug(" *********ChatConversasController - Put Iniciado*********");
@@ -202,6 +209,7 @@ namespace Orizon.Rest.Chat.API.Controllers
         //[SwaggerResponse(200, "Ok", typeof(int))]
         //[SwaggerOperation(operationId: "Chat_Conversas")]
         [HttpDelete]
+        [Route("")]
         public IActionResult Delete(Mensagem mensagem)
         {
             Log.Debug(" *********ChatConversasController - Put Iniciado*********");

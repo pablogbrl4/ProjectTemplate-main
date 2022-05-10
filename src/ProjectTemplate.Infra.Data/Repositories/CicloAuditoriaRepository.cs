@@ -2,9 +2,12 @@
 using Orizon.Rest.Chat.Domain.Entities;
 using Orizon.Rest.Chat.Domain.Interfaces.Repositories;
 using Orizon.Rest.Chat.Infra.Data.Contexto;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Orizon.Rest.Chat.Infra.Data.Repositories
 {
+    [ExcludeFromCodeCoverage]
+
     public class CicloAuditoriaRepository : ICicloAuditoriaRepository
     {
         private readonly PrefatDbContext _prefatDbContext;
