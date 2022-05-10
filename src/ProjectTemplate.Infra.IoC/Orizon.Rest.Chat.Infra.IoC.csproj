@@ -10,7 +10,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ProjectTemplate.Application\Orizon.Rest.Chat.Application.csproj" />
-    <ProjectReference Include="..\ProjectTemplate.Infra.Data\Orizon.Rest.Chat.Infra.Data.csproj" />
   </ItemGroup>
 
 </Project>

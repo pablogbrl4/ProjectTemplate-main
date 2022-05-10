@@ -5,11 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ProjectTemplate.Domain\Orizon.Rest.Chat.Domain.csproj" />
+    <PackageReference Include="AutoMapper" Version="11.0.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="11.0.1" />
+    <ProjectReference Include="..\ProjectTemplate.Infra.Data\Orizon.Rest.Chat.Infra.Data.csproj" />
   </ItemGroup>
 
 </Project>

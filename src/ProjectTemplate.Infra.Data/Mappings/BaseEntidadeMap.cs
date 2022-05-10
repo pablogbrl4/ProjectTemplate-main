@@ -12,11 +12,11 @@ namespace Orizon.Rest.Chat.Infra.Data.Mappings
             builder
                 .HasKey(c => c.Id);
 
-            builder
-                .Property(c => c.Id)
-                .ValueGeneratedOnAdd()
-                .IsRequired()
-                .HasColumnName("Id");
+            //builder
+            //    .Property(c => c.Id)
+            //    .ValueGeneratedOnAdd()
+            //    .IsRequired()
+            //    .HasColumnName("Id");
         }
     }
 }
