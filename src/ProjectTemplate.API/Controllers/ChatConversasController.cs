@@ -1,35 +1,37 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using NlogOrizon.Filters;
+using Orizon.FatureAuditado.Eventos;
+using Orizon.Rest.Chat.API.Token;
 using Orizon.Rest.Chat.Application.Interfaces;
-using Orizon.Rest.Chat.Application.Requests;
 using Orizon.Rest.Chat.Domain.Entities;
+using Orizon.Rest.Comunicacao;
 using Serilog;
+using Swashbuckle.AspNetCore.Annotations;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Orizon.Rest.Chat.API.Controllers
 {
-    //[OrizonLogFilter(
-    //    LogHeaders = new string[] { },
-    //    LogJwtClaims = new string[] { "idComprador", "idPrestador", "nomeUsuario" }
-    //)]
+    [OrizonLogFilter(
+        LogHeaders = new string[] { },
+        LogJwtClaims = new string[] { "idComprador", "idPrestador", "nomeUsuario" }
+    )]
     [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
     public class ChatConversasController : Controller
     {
-        private HttpRequestMessage Request;
-
         private readonly IGuiaApp _guiaApp;
         private readonly IChatApp _chatApp;
         private readonly IDadosAuditorApp _dadosAuditorApp;
         private readonly IChatConversasApp _chatConversasApp;
-        //private readonly IGeradorEventos _geradorEventos;
+        private readonly IGeradorEventos _geradorEventos;
         private readonly ICicloAuditoriaApp _cicloAuditoriaDao;
-        //private readonly IProxy _proxy;
+        private readonly IProxy _proxy;
         private readonly IProxyApp _proxyApp;
+        private IHttpContextAccessor _httpContextAccessor;
 
         public ChatConversasController(
             IChatConversasApp chatConversasApp
@@ -37,18 +39,20 @@ namespace Orizon.Rest.Chat.API.Controllers
             , IDadosAuditorApp dadosAuditorApp
             , IGuiaApp GuiaDao
             , ICicloAuditoriaApp cicloAuditoriaApp
-            //, IGeradorEventos geradorEventos
-            //, IProxy proxy
-            , IProxyApp proxyApp)
+            , IGeradorEventos geradorEventos
+            , IProxy proxy
+            , IProxyApp proxyApp
+            , IHttpContextAccessor httpContextAccessor)
         {
             _guiaApp = GuiaDao;
             _chatApp = chatApp;
             _dadosAuditorApp = dadosAuditorApp;
             _chatConversasApp = chatConversasApp;
             _cicloAuditoriaDao = cicloAuditoriaApp;
-            //_geradorEventos = geradorEventos;
-            //_proxy = proxy;
+            _geradorEventos = geradorEventos;
+            _proxy = proxy;
             _proxyApp = proxyApp;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         /// <summary>
@@ -59,8 +63,8 @@ namespace Orizon.Rest.Chat.API.Controllers
         /// <returns>Lista de mensagens.</returns>
         [HttpGet]
         [Route("")]
-        //[SwaggerResponse(200, "Ok", typeof(ChatConversasModel))]
-        //[SwaggerOperation(operationId: "Chat_Conversas")]
+        [SwaggerResponse(200, "Ok", typeof(ChatConversas))]
+        [SwaggerOperation(summary: "Chat_Conversas")]
         public IActionResult Get(int fkChat)
         {
             Log.Debug(" *********ChatConversasController - Get Iniciado*********");
@@ -68,11 +72,9 @@ namespace Orizon.Rest.Chat.API.Controllers
 
             try
             {
-                //string origem;
-                //if (Request.TryGetOrigemRequest(out origem))
-                //{
-                //    return _chatConversasApp.Listar(fkChat, origem);
-                //}
+                string origem;
+                if (_httpContextAccessor.TryGetOrigemRequest(out origem))
+                    return Ok(_chatConversasApp.Listar(fkChat, origem));
 
                 var list = _chatConversasApp.Listar(fkChat);
 
@@ -91,8 +93,8 @@ namespace Orizon.Rest.Chat.API.Controllers
         /// <remarks>Rest Chat ID: Chat_Conversas</remarks>
         /// <param name="mensagem">Mensagem a ser adicinada.</param>
         /// <returns>Retorna #0 em caso de sucesso, #-1 caso contrário.</returns>
-        //[SwaggerResponse(200, "Ok", typeof(int))]
-        //[SwaggerOperation(operationId: "Chat_Conversas")]
+        [SwaggerResponse(200, "Ok", typeof(int))]
+        [SwaggerOperation(summary: "Chat_Conversas")]
         [HttpPost]
         [Route("")]
         public async Task<int> Post(Mensagem mensagem)
@@ -103,13 +105,11 @@ namespace Orizon.Rest.Chat.API.Controllers
             try
             {
                 string origem = null;
-                //string origem;
-                //if (Request.TryGetOrigemRequest(out origem) && origem.Equals(OrigemRequest.Auditor))
-                //{
-                //    var dadosAuditor = _dadosAuditorApp.GetDadosAuditorByIdLogin(mensagem.IdLoginRemetente);
-
-                //    mensagem.DsLoginRemetente = dadosAuditor?.Nome ?? mensagem.DsLoginRemetente;
-                //}
+                if (_httpContextAccessor.TryGetOrigemRequest(out origem) && origem.Equals(OrigemRequest.Auditor))
+                {
+                    var dadosAuditor = _dadosAuditorApp.GetDadosAuditorByIdLogin(mensagem.IdLoginRemetente);
+                    mensagem.DsLoginRemetente = dadosAuditor?.Nome ?? mensagem.DsLoginRemetente;
+                }
 
                 if (string.IsNullOrEmpty(origem))
                 {
@@ -140,9 +140,7 @@ namespace Orizon.Rest.Chat.API.Controllers
                 _chatApp.Lido(mensagem.FkChat, mensagem.IdLoginRemetente);
 
                 await AlterarStatusApontamento(mensagem, origem);
-
                 RegistrarUltimoLoginAlteracao(mensagem, origem);
-
                 return 0;
             }
             catch (Exception error)
@@ -158,29 +156,27 @@ namespace Orizon.Rest.Chat.API.Controllers
         /// <remarks>Rest Chat ID: Chat_Conversas</remarks>
         /// <param name="mensagem">Mensagem a ser adicinada.</param>
         /// <returns>Retorna #0 em caso de sucesso, #-1 caso contrário.</returns>
-        //[SwaggerResponse(200, "Ok", typeof(int))]
-        //[SwaggerOperation(operationId: "Chat_Conversas")]
+        [SwaggerResponse(200, "Ok", typeof(int))]
+        [SwaggerOperation(summary: "Chat_Conversas")]
         [HttpPut]
         [Route("")]
         public int Put(Mensagem mensagem)
         {
             Log.Debug(" *********ChatConversasController - Put Iniciado*********");
-
             try
             {
-                //string origem;
-                //if (Request.TryGetOrigemRequest(out origem) && origem.Equals(OrigemRequest.Auditor))
-                //{
-                //    var dadosAuditor = _dadosAuditorApp.GetDadosAuditorByIdLogin(mensagem.IdLoginRemetente);
+                string origem;
+                if (_httpContextAccessor.TryGetOrigemRequest(out origem) && origem.Equals(OrigemRequest.Auditor))
+                {
+                    var dadosAuditor = _dadosAuditorApp.GetDadosAuditorByIdLogin(mensagem.IdLoginRemetente);
+                    mensagem.DsLoginRemetente = dadosAuditor?.Nome ?? mensagem.DsLoginRemetente;
+                }
 
-                //    mensagem.DsLoginRemetente = dadosAuditor?.Nome ?? mensagem.DsLoginRemetente;
-                //}
-
-                //if (string.IsNullOrEmpty(origem))
-                //{
-                //    Log.Error("Não é posível inserir mensagem sem informar uma origem");
-                //    return -1;
-                //}
+                if (string.IsNullOrEmpty(origem))
+                {
+                    Log.Error("Não é posível inserir mensagem sem informar uma origem");
+                    return -1;
+                }
 
                 Log.Debug("Iniciando Atualizacao Chat");
 
@@ -206,8 +202,8 @@ namespace Orizon.Rest.Chat.API.Controllers
         /// <remarks>Rest Chat ID: Chat_Conversas</remarks>
         /// <param name="mensagem">Mensagem a ser adicinada.</param>
         /// <returns>Retorna #0 em caso de sucesso, #-1 caso contrário.</returns>
-        //[SwaggerResponse(200, "Ok", typeof(int))]
-        //[SwaggerOperation(operationId: "Chat_Conversas")]
+        [SwaggerResponse(200, "Ok", typeof(int))]
+        [SwaggerOperation(summary: "Chat_Conversas")]
         [HttpDelete]
         [Route("")]
         public IActionResult Delete(Mensagem mensagem)
@@ -216,18 +212,15 @@ namespace Orizon.Rest.Chat.API.Controllers
 
             try
             {
-                //string origem;
-                //if (Request.TryGetOrigemRequest(out origem) && origem.Equals(OrigemRequest.Auditor))
-                //{
-                //    var dadosAuditor = _dadosAuditorApp.GetDadosAuditorByIdLogin(mensagem.IdLoginRemetente);
+                string origem;
+                if (_httpContextAccessor.TryGetOrigemRequest(out origem) && origem.Equals(OrigemRequest.Auditor))
+                {
+                    var dadosAuditor = _dadosAuditorApp.GetDadosAuditorByIdLogin(mensagem.IdLoginRemetente);
+                    mensagem.DsLoginRemetente = dadosAuditor?.Nome ?? mensagem.DsLoginRemetente;
+                }
 
-                //    mensagem.DsLoginRemetente = dadosAuditor?.Nome ?? mensagem.DsLoginRemetente;
-                //}
-
-                //if (string.IsNullOrEmpty(origem))
-                //{
-                //    return BadRequest("Não é posível inserir mensagem sem informar uma origem");
-                //}
+                if (string.IsNullOrEmpty(origem))
+                    return BadRequest("Não é posível inserir mensagem sem informar uma origem");
 
                 var possuiConversa = _chatConversasApp.BuscarChatRemetente(mensagem.IdChatConversas, mensagem.IdLoginRemetente, mensagem.FkChat);
 
@@ -250,25 +243,17 @@ namespace Orizon.Rest.Chat.API.Controllers
         private async Task AlterarStatusApontamento(Mensagem mensagem, string origem)
         {
             if (mensagem.Tipo == MensagemChat.TipoApontamentoItem)
-            {
                 await AlterarStatusApontamentoItem(mensagem, origem);
-            }
             else if (mensagem.Tipo == MensagemChat.TipoApontamentoGuia)
-            {
                 await AlterarStatusApontamentoGuiaNegociacao(mensagem, origem);
-            }
         }
 
         private async Task AlterarStatusApontamentoGuiaNegociacao(Mensagem mensagem, string origem)
         {
             if (origem == MensagemChat.OrigemPrestador)
             {
-                //TODO
-                // var sUrl = _proxy.RetornaEnderecoInterno("preFatStatusContaNegociacao");
-
-                var sUrl = "";
+                var sUrl = _proxy.RetornaEnderecoInterno("preFatStatusContaNegociacao");
                 sUrl = sUrl + $"?idConta={mensagem.Id}&observacao={mensagem.Conversa}&idStatus=";
-
                 switch (origem)
                 {
                     case MensagemChat.OrigemPrestador:
@@ -288,7 +273,7 @@ namespace Orizon.Rest.Chat.API.Controllers
 
                 Log.Debug("Iniciando chamada para alterar o status guia negociacao...");
                 Log.Debug("sUrl: " + sUrl);
-                var retorno = await _proxyApp.PostAsync(sUrl, Request);
+                var retorno = await _proxyApp.PostAsync(sUrl, RequestTranscriptHelpers.ToHttpRequestMessage(_httpContextAccessor.HttpContext.Request));
                 Log.Debug($"Alterando status guia negociacao {retorno}");
             }
         }
@@ -297,9 +282,7 @@ namespace Orizon.Rest.Chat.API.Controllers
         {
             if ((origem == MensagemChat.OrigemPrestador) || (origem == MensagemChat.OrigemAuditor))
             {
-                //TODO
-                //var sUrl = _proxy.RetornaEnderecoInterno("preFatStatusItem");
-                var sUrl = "";
+                var sUrl = _proxy.RetornaEnderecoInterno("preFatStatusItem");
                 sUrl = sUrl + $"?Id_Item={mensagem.Id}&Status=";
 
                 var cicloDados = _cicloAuditoriaDao.GetCicloDadosApontamento(Convert.ToInt32(mensagem.Id));
@@ -312,14 +295,14 @@ namespace Orizon.Rest.Chat.API.Controllers
                             case (int)Acao.Justificar:
                                 {
                                     sUrl = sUrl + (int)StatusItem.Justificado;
-                                    //_geradorEventos.ItemJustificado(cicloDados.protocolo, mensagem.GuiaId, Convert.ToInt32(mensagem.Id), cicloDados.descricaoItem, cicloDados.ciclo, cicloDados.quantidade ?? 0, cicloDados.valorUnidade ?? 0, cicloDados.observacao);
+                                    _geradorEventos.ItemJustificado(cicloDados.protocolo, mensagem.GuiaId, Convert.ToInt32(mensagem.Id), cicloDados.descricaoItem, cicloDados.ciclo, cicloDados.quantidade ?? 0, cicloDados.valorUnidade ?? 0, cicloDados.observacao);
                                     break;
                                 }
 
                             case (int)Acao.Aceitar:
                                 {
                                     sUrl = sUrl + (int)StatusItem.Aceito;
-                                    //_geradorEventos.ItemAceito(cicloDados.protocolo, mensagem.GuiaId, Convert.ToInt32(mensagem.Id), cicloDados.descricaoItem, cicloDados.ciclo, cicloDados.quantidade ?? 0, cicloDados.valorUnidade ?? 0, cicloDados.observacao);
+                                    _geradorEventos.ItemAceito(cicloDados.protocolo, mensagem.GuiaId, Convert.ToInt32(mensagem.Id), cicloDados.descricaoItem, cicloDados.ciclo, cicloDados.quantidade ?? 0, cicloDados.valorUnidade ?? 0, cicloDados.observacao);
                                     break;
                                 }
 
@@ -329,7 +312,7 @@ namespace Orizon.Rest.Chat.API.Controllers
 
                 Log.Debug("Iniciando chamada para alterar o status do item...");
                 Log.Debug("sUrl: " + sUrl);
-                var retorno = await _proxyApp.PostAsync(sUrl, Request);
+                var retorno = await _proxyApp.PostAsync(sUrl, RequestTranscriptHelpers.ToHttpRequestMessage(_httpContextAccessor.HttpContext.Request));
                 Log.Debug($"Alterando status do item {retorno}");
             }
         }
@@ -339,9 +322,7 @@ namespace Orizon.Rest.Chat.API.Controllers
             //Registrar ultimo Login do Prestador/Auditor
             if (mensagem.GuiaId > 0)
             {
-                //TODO
-                // var ultimoLogin = Token.Token.RetornaToken(Request).nomeUsuario;
-                var ultimoLogin = "";
+                var ultimoLogin = Token.Token.RetornaToken(RequestTranscriptHelpers.ToHttpRequestMessage(_httpContextAccessor.HttpContext.Request)).nomeUsuario;
                 switch (origem)
                 {
                     case MensagemChat.OrigemPrestador:
@@ -353,7 +334,6 @@ namespace Orizon.Rest.Chat.API.Controllers
                 }
             }
         }
-
         #endregion MetodosPrivados
     }
 }

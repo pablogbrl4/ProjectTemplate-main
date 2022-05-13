@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Orizon.Rest.Chat.Application.Interfaces;
 using Orizon.Rest.Chat.Application.Services;
@@ -44,6 +45,9 @@ namespace Orizon.Rest.Chat.Infra.IoC
             services.AddScoped<IChatConversasRepository, ChatConversasRepository>();
             services.AddScoped<ICicloAuditoriaRepository, CicloAuditoriaRepository>();
             services.AddScoped<IDadosAuditorRepository, DadosAuditorRepository>();
+
+            //HttpContext
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         }
     }
 }
