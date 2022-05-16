@@ -8,20 +8,16 @@ namespace Orizon.Rest.Chat.Infra.Data.Repositories
 {
     [ExcludeFromCodeCoverage]
 
-    public class DadosAuditorRepository : IDadosAuditorRepository
+    public class DadosAuditorRepository : BaseRepositorio, IDadosAuditorRepository
     {
-        private readonly DativaDbContext _dativaDbContext;
-
-        public DadosAuditorRepository(DativaDbContext dativaDbContext)
+        public DadosAuditorRepository(PrefatDbContext prefatDbContext, DativaDbContext dativaDbContext)
+            : base(prefatDbContext, dativaDbContext)
         {
-            _dativaDbContext = dativaDbContext;
         }
 
         public DadosAuditor GetDadosAuditorByIdLogin(int idlogin)
         {
-            if (_dativaDbContext.Connection.State == System.Data.ConnectionState.Closed)
-                _dativaDbContext.Connection.Open();
-
+            OpenConnectionDativa();
             return _dativaDbContext.Connection.QueryFirstOrDefault<DadosAuditor>(
                     sql: dadosAuditorByLoginQuery,
                     param: new { idlogin },
@@ -30,11 +26,15 @@ namespace Orizon.Rest.Chat.Infra.Data.Repositories
         }
 
         private readonly string dadosAuditorByLoginQuery =
-            $@"SELECT 
-                [id_login] AS [{nameof(DadosAuditor.IdLogin)}]
-                ,[ds_login] AS [{nameof(DadosAuditor.Login)}]
-                ,[ds_usuario] AS [{nameof(DadosAuditor.Nome)}]
-            FROM [TB_FRA_LOGIN] WITH (NOLOCK)
-            WHERE [id_login] = @idLogin";
+            $@"
+              SELECT
+                  [id_login] AS [{nameof(DadosAuditor.IdLogin)}],
+                  [ds_login] AS [{nameof(DadosAuditor.Login)}],
+                  [ds_usuario] AS [{nameof(DadosAuditor.Nome)}]
+              FROM
+                  [TB_FRA_LOGIN] WITH (NOLOCK)
+              WHERE
+                  [id_login] = @idLogin
+            ";
     }
 }

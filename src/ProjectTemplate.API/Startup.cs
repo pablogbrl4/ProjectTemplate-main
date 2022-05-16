@@ -7,11 +7,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Orizon.FatureAuditado.Eventos;
 using Orizon.Rest.Chat.API.Filters;
 using Orizon.Rest.Chat.Application.Mappings;
 using Orizon.Rest.Chat.Infra.Data.Contexto;
 using Orizon.Rest.Chat.Infra.Data.Provider;
 using Orizon.Rest.Chat.Infra.IoC;
+using Orizon.Rest.Comunicacao;
 using Serilog;
 using System;
 using System.Globalization;
@@ -33,6 +35,10 @@ namespace Orizon.Rest.Chat.API
         public void ConfigureServices(IServiceCollection services)
         {
             InjectorDependencies.Registrer(services, Configuration);
+
+            //Dlls externas
+            services.AddScoped<IGeradorEventos, GeradorEventos>();
+            services.AddScoped<IProxy, Proxy>();
 
             //services.AddSingleton(Log.Logger);
             services.AddAutoMapper(x => x.AddProfile(new BaseMapping()));

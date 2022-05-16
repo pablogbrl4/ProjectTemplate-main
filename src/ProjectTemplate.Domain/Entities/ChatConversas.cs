@@ -11,6 +11,6 @@ namespace Orizon.Rest.Chat.Domain.Entities
         public int IdLoginRemetente { get; set; }
         public string DsLoginRemetente { get; set; }
         public string Origem { get; set; }
-        public bool FlgManual { get; set; }
+        public bool? FlgManual { get; set; }
     }
 }

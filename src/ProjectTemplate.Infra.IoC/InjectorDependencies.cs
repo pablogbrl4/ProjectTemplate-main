@@ -28,23 +28,27 @@ namespace Orizon.Rest.Chat.Infra.IoC
             services.AddScoped<IChatConversasApp, ChatConversasApp>();
             services.AddScoped<ICicloAuditoriaApp, CicloAuditoriaApp>();
             services.AddScoped<IDadosAuditorApp, DadosAuditorApp>();
+            services.AddScoped<IGuiaApp, GuiaApp>();
             services.AddScoped<IProxyApp, ProxyApp>();
 
             //Domínio
             services.AddScoped(typeof(IBaseServico<>), typeof(BaseServico<>));
             services.AddScoped<IApontamentoService, ApontamentoService>();
-            services.AddScoped<IChatService, ChatService>();
             services.AddScoped<IChatConversasService, ChatConversasService>();
+            services.AddScoped<IChatService, ChatService>();
             services.AddScoped<ICicloAuditoriaService, CicloAuditoriaService>();
             services.AddScoped<IDadosAuditorService, DadosAuditorService>();
+            services.AddScoped<IGuiaService, GuiaService>();
 
             //Repositorio
-            services.AddScoped(typeof(IBaseRepositorio<>), typeof(BaseRepositorio<>));
+            services.AddScoped(typeof(IBaseRepositorio), typeof(BaseRepositorio));
             services.AddScoped<IApontamentoRepository, ApontamentoRepository>();
-            services.AddScoped<IChatRepository, ChatRepository>();
             services.AddScoped<IChatConversasRepository, ChatConversasRepository>();
+            services.AddScoped<IChatLeituraRepository, ChatLeituraRepository>();
+            services.AddScoped<IChatRepository, ChatRepository>();
             services.AddScoped<ICicloAuditoriaRepository, CicloAuditoriaRepository>();
             services.AddScoped<IDadosAuditorRepository, DadosAuditorRepository>();
+            services.AddScoped<IGuiaRepository, GuiaRepository>();
 
             //HttpContext
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

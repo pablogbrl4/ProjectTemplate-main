@@ -3,14 +3,11 @@ using System.Collections.Generic;
 
 namespace Orizon.Rest.Chat.Domain.Interfaces.Repositories
 {
-    public interface IChatRepository
+    public interface IChatRepository : IBaseRepositorio
     {
         int Insert(int idLogin);
-
         void Lido(int idChat, int idLogin);
-
         IEnumerable<ChatE> Listar(int? idChat, int idLogin);
-
         IEnumerable<ChatE> Listar(int? idChat, int idLogin, string origem);
     }
 }

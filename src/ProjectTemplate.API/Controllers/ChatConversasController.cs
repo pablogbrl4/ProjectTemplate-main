@@ -5,6 +5,7 @@ using Orizon.FatureAuditado.Eventos;
 using Orizon.Rest.Chat.API.Token;
 using Orizon.Rest.Chat.Application.Interfaces;
 using Orizon.Rest.Chat.Domain.Entities;
+using Orizon.Rest.Chat.Domain.Enums;
 using Orizon.Rest.Comunicacao;
 using Serilog;
 using Swashbuckle.AspNetCore.Annotations;
@@ -37,14 +38,14 @@ namespace Orizon.Rest.Chat.API.Controllers
             IChatConversasApp chatConversasApp
             , IChatApp chatApp
             , IDadosAuditorApp dadosAuditorApp
-            , IGuiaApp GuiaDao
+            , IGuiaApp guiaApp
             , ICicloAuditoriaApp cicloAuditoriaApp
             , IGeradorEventos geradorEventos
             , IProxy proxy
             , IProxyApp proxyApp
             , IHttpContextAccessor httpContextAccessor)
         {
-            _guiaApp = GuiaDao;
+            _guiaApp = guiaApp;
             _chatApp = chatApp;
             _dadosAuditorApp = dadosAuditorApp;
             _chatConversasApp = chatConversasApp;
@@ -105,7 +106,7 @@ namespace Orizon.Rest.Chat.API.Controllers
             try
             {
                 string origem = null;
-                if (_httpContextAccessor.TryGetOrigemRequest(out origem) && origem.Equals(OrigemRequest.Auditor))
+                if (_httpContextAccessor.TryGetOrigemRequest(out origem) && origem.Equals(Origem.Auditor))
                 {
                     var dadosAuditor = _dadosAuditorApp.GetDadosAuditorByIdLogin(mensagem.IdLoginRemetente);
                     mensagem.DsLoginRemetente = dadosAuditor?.Nome ?? mensagem.DsLoginRemetente;
@@ -166,7 +167,7 @@ namespace Orizon.Rest.Chat.API.Controllers
             try
             {
                 string origem;
-                if (_httpContextAccessor.TryGetOrigemRequest(out origem) && origem.Equals(OrigemRequest.Auditor))
+                if (_httpContextAccessor.TryGetOrigemRequest(out origem) && origem.Equals(Origem.Auditor))
                 {
                     var dadosAuditor = _dadosAuditorApp.GetDadosAuditorByIdLogin(mensagem.IdLoginRemetente);
                     mensagem.DsLoginRemetente = dadosAuditor?.Nome ?? mensagem.DsLoginRemetente;
@@ -213,7 +214,7 @@ namespace Orizon.Rest.Chat.API.Controllers
             try
             {
                 string origem;
-                if (_httpContextAccessor.TryGetOrigemRequest(out origem) && origem.Equals(OrigemRequest.Auditor))
+                if (_httpContextAccessor.TryGetOrigemRequest(out origem) && origem.Equals(Origem.Auditor))
                 {
                     var dadosAuditor = _dadosAuditorApp.GetDadosAuditorByIdLogin(mensagem.IdLoginRemetente);
                     mensagem.DsLoginRemetente = dadosAuditor?.Nome ?? mensagem.DsLoginRemetente;

@@ -1,4 +1,6 @@
-﻿using Orizon.Rest.Chat.Domain.Entities;
+﻿using Dapper;
+using Orizon.Rest.Chat.Domain.Entities;
+using Orizon.Rest.Chat.Domain.Enums;
 using Orizon.Rest.Chat.Domain.Interfaces.Repositories;
 using Orizon.Rest.Chat.Infra.Data.Contexto;
 using System;
@@ -10,15 +12,13 @@ namespace Orizon.Rest.Chat.Infra.Data.Repositories
 {
     [ExcludeFromCodeCoverage]
 
-    public class ChatConversasRepository : IChatConversasRepository
+    public class ChatConversasRepository : BaseRepositorio, IChatConversasRepository
     {
         private static readonly string AuditorTitulo = "Analista";
 
-        private readonly PrefatDbContext _prefatDbContext;
-
-        public ChatConversasRepository(PrefatDbContext prefatDbContext)
+        public ChatConversasRepository(PrefatDbContext prefatDbContext, DativaDbContext dativaDbContext)
+            : base(prefatDbContext, dativaDbContext)
         {
-            _prefatDbContext = prefatDbContext;
         }
 
         /// <summary>
@@ -28,23 +28,33 @@ namespace Orizon.Rest.Chat.Infra.Data.Repositories
         /// <param name="origem"></param>
         public void Insert(Mensagem mensagem, string origem)
         {
-            return;
-
-            /*
-            var bd = new BancoDados("PreFaturamento")
-            {
-                TextoComando = query_insert_chat_conversas,
-                TipoComando = CommandType.Text
-            };
-
-            bd.CriarParametro("FK_CHAT", DbType.Int32, mensagem.FkChat);
-            bd.CriarParametro("CONVERSA", DbType.String, mensagem.Conversa);
-            bd.CriarParametro("ID_LOGIN_REMETENTE", DbType.Int32, mensagem.IdLoginRemetente);
-            bd.CriarParametro("DS_LOGIN_REMETENTE", DbType.String, mensagem.DsLoginRemetente);
-            bd.CriarParametro("ORIGEM", DbType.String, origem);
-            bd.ExecutarComando();
-
-            */
+            BeginTransactionPrefat();
+            var sql =
+                $@"
+                 INSERT INTO
+                     [dbo].[CHAT_CONVERSAS] (
+                         [FK_CHAT],
+                         [DATA],
+                         [CONVERSA],
+                         [ID_LOGIN_REMETENTE],
+                         [DS_LOGIN_REMETENTE],
+                         [ORIGEM]
+                     )
+                 VALUES
+                     (
+                         {mensagem.FkChat},
+                         GETDATE(),
+                         {mensagem.Conversa},
+                         {mensagem.IdLoginRemetente},
+                         {mensagem.DsLoginRemetente},
+                         {origem}
+                     )
+                ";
+            _prefatDbContext.Connection.Execute(
+                    sql: sql,
+                    transaction: TransactionPrefat
+                );
+            CommitPrefat();
         }
 
         /// <summary>
@@ -55,20 +65,22 @@ namespace Orizon.Rest.Chat.Infra.Data.Repositories
         /// <param name="conversa"></param>
         public void AtualizarMensagemChat(int fkchat, int IdChatConversas, string conversa)
         {
-            return;
-
-            /*
-            var bd = new BancoDados("PreFaturamento")
-            {
-                TextoComando = query_update_chat_conversa,
-                TipoComando = CommandType.Text
-            };
-
-            bd.CriarParametro("FK_CHAT", DbType.Int32, fkchat);
-            bd.CriarParametro("CONVERSA", DbType.String, conversa);
-            bd.CriarParametro("IdChatConversas", DbType.Int32, IdChatConversas);
-            bd.ExecutarComando();
-            */
+            BeginTransactionPrefat();
+            var sql =
+                $@"
+                  UPDATE
+                      CHAT_CONVERSAS
+                  SET
+                      CONVERSA = {conversa}
+                  WHERE
+                      FK_CHAT = {fkchat}
+                      AND ID_CHAT_CONVERSAS = {IdChatConversas}
+                ";
+            _prefatDbContext.Connection.Execute(
+                    sql: sql,
+                    transaction: TransactionPrefat
+                );
+            CommitPrefat();
         }
 
         /// <summary>
@@ -78,50 +90,46 @@ namespace Orizon.Rest.Chat.Infra.Data.Repositories
         /// <param name="FkChat"></param>
         public int BuscarUltimaMensagemChat(int FkChat, int remetente)
         {
-            return 0;
-
-            /*
-
-            var bd = new BancoDados("PreFaturamento")
-            {
-                TextoComando = query_select_Ultima_conversa,
-                TipoComando = CommandType.Text
-            };
-
-            bd.CriarParametro("FK_CHAT", DbType.Int32, FkChat);
-            bd.CriarParametro("IdLoginRemetente", DbType.Int32, remetente);
-
-            DataTable dataTable = bd.ExecutarDataTable();
-
-            if (dataTable.Rows.Count > 0)
-            {
-                return Convert.ToInt32(dataTable.Rows[0]["ID_CHAT_CONVERSAS"]);
-            }
-
-            return 0;
-
-            */
+            OpenConnectionPrefat();
+            var sql = $@"
+                        SELECT
+                            TOP 1 ID_CHAT_CONVERSAS
+                        FROM
+                            CHAT_CONVERSAS
+                        WHERE
+                            FK_CHAT = {FkChat}
+                            AND ID_LOGIN_REMETENTE = {remetente}
+                        ORDER BY
+                            DATA DESC
+                      ";
+            return _prefatDbContext.Connection.ExecuteScalar<int>(
+                    sql: sql,
+                    commandType: CommandType.Text
+                );
         }
 
         public bool BuscarChatRemetente(int IdChatConversas, int remetente, int fkChat)
         {
-            return false;
-            /*
-            var bd = new BancoDados("PreFaturamento")
-            {
-                TextoComando = query_select_conversa_remetente,
-                TipoComando = CommandType.Text
-            };
+            OpenConnectionPrefat();
+            var sql =
+                $@"
+                  SELECT
+                      TOP 1 ID_CHAT_CONVERSAS
+                  FROM
+                      CHAT_CONVERSAS
+                  WHERE
+                      FK_CHAT = {fkChat}
+                      AND ID_LOGIN_REMETENTE = {remetente}
+                      AND ID_CHAT_CONVERSAS = {IdChatConversas}
+                  ORDER BY
+                      DATA DESC
+                ";
+            var idChatConversa = _prefatDbContext.Connection.ExecuteScalar<int>(
+                    sql: sql,
+                    commandType: CommandType.Text
+                );
 
-            bd.CriarParametro("FK_CHAT", DbType.Int32, fkChat);
-            bd.CriarParametro("IdChatConversas", DbType.Int32, IdChatConversas);
-            bd.CriarParametro("IdLoginRemetente", DbType.Int32, remetente);
-
-            DataTable dataTable = bd.ExecutarDataTable();
-
-            return dataTable.Rows.Count > 0;
-
-            */
+            return idChatConversa != 0;
         }
 
         /// <summary>
@@ -132,21 +140,21 @@ namespace Orizon.Rest.Chat.Infra.Data.Repositories
         /// <param name="idRemetente"></param>
         public void DeletarChatConversas(int fkchat, int IdChatConversas, int idRemetente)
         {
-            return;
-
-            /*
-            var bd = new BancoDados("PreFaturamento")
-            {
-                TextoComando = query_delete_chat_conversa,
-                TipoComando = CommandType.Text
-            };
-
-            bd.CriarParametro("FK_CHAT", DbType.Int32, fkchat);
-            bd.CriarParametro("IdChatConversas", DbType.Int32, IdChatConversas);
-            bd.CriarParametro("IdLoginRemetente", DbType.Int32, idRemetente);
-            bd.ExecutarComando();
-
-            */
+            BeginTransactionPrefat();
+            var sql =
+                $@"
+                  DELETE FROM
+                      CHAT_CONVERSAS
+                  WHERE
+                      FK_CHAT = {fkchat}
+                      AND ID_CHAT_CONVERSAS = {IdChatConversas}
+                      AND ID_LOGIN_REMETENTE = {idRemetente}
+                ";
+            _prefatDbContext.Connection.Execute(
+                    sql: sql,
+                    transaction: TransactionPrefat
+                );
+            CommitPrefat();
         }
 
         /// <summary>
@@ -156,185 +164,80 @@ namespace Orizon.Rest.Chat.Infra.Data.Repositories
         /// <returns></returns>
         public IEnumerable<ChatConversas> Listar(int fkChat)
         {
-            return null;
-
-            /*
             return ListarImpl(fkChat, null);
-            */
         }
 
         public IEnumerable<ChatConversas> Listar(int fkChat, string origem)
         {
-            return null;
-
-            /*
-            return ListarImpl(fkChat, origem.Equals(OrigemRequest.Prestador) ? AuditorTitulo : null);
-
-            */
+            return ListarImpl(fkChat, origem.Equals(Origem.Prestador) ? AuditorTitulo : null);
         }
 
         public IEnumerable<ChatConversas> ListarPorFkChatConversa(int fkChat, string conversa)
         {
-            return null;
-
-            /*
-            var lstContaConversasModel = new List<ChatConversas>();
-            var bd = new BancoDados("PreFaturamento")
+            OpenConnectionPrefat();
+            var sql = $@"
+                        SELECT
+                            ID_CHAT_CONVERSAS AS {nameof(ChatConversas.IdChatConversas)},
+                            FK_CHAT AS {nameof(ChatConversas.FkChat)},
+                            DATA AS {nameof(ChatConversas.Data)},
+                            CONVERSA AS {nameof(ChatConversas.Conversa)},
+                            ID_LOGIN_REMETENTE AS {nameof(ChatConversas.IdLoginRemetente)},
+                            DS_LOGIN_REMETENTE AS {nameof(ChatConversas.DsLoginRemetente)},
+                            ORIGEM AS {nameof(ChatConversas.Origem)},
+                            FLG_MANUAL AS {nameof(ChatConversas.FlgManual)}
+                        FROM
+                            CHAT_CONVERSAS WITH (NOLOCK)
+                        WHERE
+                            FK_CHAT = {fkChat}
+                            AND CONVERSA = '{conversa}'
+                        ORDER BY
+                            ID_CHAT_CONVERSAS
+                      ";
+            var chatsConversas = _prefatDbContext.Connection.Query<ChatConversas>(
+                    sql: sql,
+                    commandType: CommandType.Text
+                );
+            foreach (var item in chatsConversas)
             {
-                TextoComando = query_select_chat_conversas_listar_por_FkChat_Conversa,
-                TipoComando = CommandType.Text
-            };
-
-            bd.CriarParametro("FK_CHAT", DbType.Int32, fkChat);
-            bd.CriarParametro("CONVERSA", DbType.String, conversa);
-
-            DataTable dataTable = bd.ExecutarDataTable();
-
-            if (dataTable.Rows.Count > 0)
-            {
-                lstContaConversasModel = new List<ChatConversasModel>(dataTable.Rows.Count);
-                foreach (DataRow linha in dataTable.Rows)
-                {
-                    var obj = Bind(linha);
-                    lstContaConversasModel.Add(obj);
-                }
+                if (item.FlgManual == null)
+                    item.FlgManual = false;
             }
-
-            return lstContaConversasModel;
-
-            */
+            return chatsConversas;
         }
 
-        /*
         private IEnumerable<ChatConversas> ListarImpl(int fkChat, string remetente)
         {
-            var lstContaConversasModel = new IEnumerable<ChatConversasModel>();
-            var bd = new BancoDados("PreFaturamento")
+            OpenConnectionPrefat();
+            var sql = $@"
+                        SELECT
+                            ID_CHAT_CONVERSAS,
+                            FK_CHAT,
+                            DATA,
+                            CONVERSA,
+                            ID_LOGIN_REMETENTE,
+                            DS_LOGIN_REMETENTE,
+                            ORIGEM,
+                            FLG_MANUAL
+                        FROM
+                            CHAT_CONVERSAS WITH (NOLOCK)
+                        WHERE
+                            FK_CHAT = {fkChat}
+                        ORDER BY
+                            ID_CHAT_CONVERSAS
+                      ";
+            var chatsConversas = _prefatDbContext.Connection.Query<ChatConversas>(
+                    sql: sql,
+                    commandType: CommandType.Text
+                );
+            foreach (var obj in chatsConversas)
             {
-                TextoComando = query_select_chat_conversas_listar,
-                TipoComando = CommandType.Text
-            };
+                if (obj.FlgManual == null)
+                    obj.FlgManual = false;
 
-            bd.CriarParametro("FK_CHAT", DbType.Int32, fkChat);
-
-            DataTable dataTable = bd.ExecutarDataTable();
-
-            if (dataTable.Rows.Count > 0)
-            {
-                lstContaConversasModel = new IEnumerable<ChatConversasModel>(dataTable.Rows.Count);
-                foreach (DataRow linha in dataTable.Rows)
-                {
-                    var obj = Bind(linha);
-
-                    if (obj.Origem == OrigemRequest.Auditor)
-                        obj.DsLoginRemetente = remetente ?? obj.DsLoginRemetente;
-
-                    lstContaConversasModel.Add(obj);
-                }
+                if (obj.Origem == Origem.Auditor)
+                    obj.DsLoginRemetente = remetente ?? obj.DsLoginRemetente;
             }
-
-            return lstContaConversasModel;
+            return chatsConversas;
         }
-
-        private ChatConversas Bind(DataRow oDataRow)
-        {
-            ChatConversasModel chatConversasModel = new ChatConversasModel();
-            chatConversasModel.IdChatConversas = Convert.ToInt32(oDataRow["ID_CHAT_CONVERSAS"]);
-            chatConversasModel.FkChat = Convert.ToInt32(oDataRow["FK_CHAT"]);
-            chatConversasModel.Data = Converter.ConverterToDateTime(oDataRow["DATA"].ToString());
-            chatConversasModel.Conversa = oDataRow["CONVERSA"].ToString();
-            chatConversasModel.IdLoginRemetente = Convert.ToInt32(oDataRow["ID_LOGIN_REMETENTE"]);
-            chatConversasModel.DsLoginRemetente = oDataRow["DS_LOGIN_REMETENTE"].ToString();
-            chatConversasModel.Origem = oDataRow["ORIGEM"].ToString();
-            chatConversasModel.FlgManual = String.IsNullOrWhiteSpace(oDataRow["FLG_MANUAL"].ToString()) ? false : true;
-            return chatConversasModel;
-        }
-
-        */
-
-        #region QUERY
-
-        internal string query_delete_chat_conversa = @"
-            DELETE FROM CHAT_CONVERSAS
-            WHERE FK_CHAT = @FK_CHAT AND ID_CHAT_CONVERSAS = @IdChatConversas
-            AND ID_LOGIN_REMETENTE = @IdLoginRemetente
-        ";
-
-        internal string query_update_chat_conversa = @"
-            UPDATE CHAT_CONVERSAS SET CONVERSA = @CONVERSA
-            WHERE FK_CHAT = @FK_CHAT AND ID_CHAT_CONVERSAS = @IdChatConversas 
-        ";
-
-        internal string query_select_Ultima_conversa = @"
-            
-            SELECT TOP 1 ID_CHAT_CONVERSAS FROM CHAT_CONVERSAS 
-            WHERE FK_CHAT = @FK_CHAT AND ID_LOGIN_REMETENTE = @IdLoginRemetente 
-            ORDER BY DATA DESC
-
-        ";
-
-        internal string query_select_conversa_remetente = @"
-            
-            SELECT TOP 1 ID_CHAT_CONVERSAS FROM CHAT_CONVERSAS 
-            WHERE FK_CHAT = @FK_CHAT AND ID_LOGIN_REMETENTE = @IdLoginRemetente AND ID_CHAT_CONVERSAS = @IdChatConversas
-            ORDER BY DATA DESC
-
-        ";
-
-        internal string query_insert_chat_conversas = @"
-            INSERT INTO [dbo].[CHAT_CONVERSAS]     
-            ([FK_CHAT]     
-            ,[DATA]     
-            ,[CONVERSA]     
-            ,[ID_LOGIN_REMETENTE]     
-            ,[DS_LOGIN_REMETENTE] 
-	        ,[ORIGEM])     
-            VALUES     
-            (@FK_CHAT     
-            ,GETDATE()     
-            ,@CONVERSA     
-            ,@ID_LOGIN_REMETENTE     
-            ,@DS_LOGIN_REMETENTE 
-	        ,@ORIGEM) 
-        ";
-
-        internal string query_select_chat_conversas_listar = @"
-             SELECT    
-              ID_CHAT_CONVERSAS   
-              , FK_CHAT   
-              , DATA   
-              , CONVERSA   
-              , ID_LOGIN_REMETENTE   
-              , DS_LOGIN_REMETENTE 
-              , ORIGEM    
-              , FLG_MANUAL
-             FROM    
-              CHAT_CONVERSAS WITH (NOLOCK)   
-             WHERE    
-              FK_CHAT = @FK_CHAT    
-             ORDER BY    
-              ID_CHAT_CONVERSAS
-        ";
-
-        internal string query_select_chat_conversas_listar_por_FkChat_Conversa = @"
-             SELECT
-                 ID_CHAT_CONVERSAS,
-                 FK_CHAT,
-                 DATA,
-                 CONVERSA,
-                 ID_LOGIN_REMETENTE,
-                 DS_LOGIN_REMETENTE,
-                 ORIGEM,
-                 FLG_MANUAL
-             FROM
-                 CHAT_CONVERSAS WITH (NOLOCK)
-             WHERE
-                 FK_CHAT = @FK_CHAT
-                 AND CONVERSA = @CONVERSA
-             ORDER BY
-                 ID_CHAT_CONVERSAS
-        ";
-
-        #endregion
     }
 }

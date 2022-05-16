@@ -1,4 +1,5 @@
-﻿using Orizon.Rest.Chat.Domain.Entities;
+﻿using Dapper;
+using Orizon.Rest.Chat.Domain.Entities;
 using Orizon.Rest.Chat.Domain.Interfaces.Repositories;
 using Orizon.Rest.Chat.Infra.Data.Contexto;
 using System;
@@ -9,79 +10,59 @@ namespace Orizon.Rest.Chat.Infra.Data.Repositories
 {
     [ExcludeFromCodeCoverage]
 
-    public class ApontamentoRepository : IApontamentoRepository
+    public class ApontamentoRepository : BaseRepositorio, IApontamentoRepository
     {
-        private readonly PrefatDbContext _prefatDbContext;
+        private readonly IDadosAuditorRepository _dadosAuditorRepository;
 
-        public ApontamentoRepository(PrefatDbContext prefatDbContext)
+        public ApontamentoRepository(
+            PrefatDbContext prefatDbContext
+            , DativaDbContext dativaDbContext
+            , IDadosAuditorRepository dadosAuditorRepository)
+                : base(prefatDbContext, dativaDbContext)
         {
-            _prefatDbContext = prefatDbContext;
+            _dadosAuditorRepository = dadosAuditorRepository;
         }
 
         public void InserirDados(Mensagem[] mensagens)
         {
-            return;
-
-            /*
-
-            var bancoDados = new BancoDados("PreFaturamento")
+            var dadosAuditor = _dadosAuditorRepository.GetDadosAuditorByIdLogin(mensagens[0].IdLoginRemetente);
+            BeginTransactionPrefat();
+            foreach (var msg in mensagens)
             {
-                TipoComando = CommandType.StoredProcedure
-            };
+                msg.DsLoginRemetente = dadosAuditor?.Nome ?? msg.DsLoginRemetente;
+                int idChat = InserirDadosConversa(msg);
+                AtualizaIdChat(msg, idChat);
+            }
+            CommitPrefat();
+        }
 
-            try
-            {
-                var dadosAuditor = _dadosAuditorDao.GetDadosAuditorByIdLogin(mensagens[0].IdLoginRemetente);
-
-                bancoDados.BeginTransaction();
-                foreach (var msg in mensagens)
+        private int InserirDadosConversa(Mensagem msg)
+        {
+            var idChat = _prefatDbContext.Connection.ExecuteScalar(
+                sql: "PRC_CHAT_INSERIR_DADOS_APONTAMENTO",
+                new
                 {
-                    msg.DsLoginRemetente = dadosAuditor?.Nome ?? msg.DsLoginRemetente;
-
-                    int idChat = InserirDadosConversa(bancoDados, msg);
-                    AtualizaIdChat(bancoDados, msg, idChat);
-                }
-                bancoDados.TransactionCommit();
-            }
-            catch
-            {
-                bancoDados.TransactionRollback();
-                throw;
-            }
-            finally
-            {
-                bancoDados.Close();
-            }
-
-            */
+                    ID_LOGIN = msg.IdLoginRemetente,
+                    CONVERSA = msg.Conversa,
+                    DS_LOGIN = msg.DsLoginRemetente,
+                    ID_CHAT = msg.FkChat,
+                },
+                commandType: CommandType.StoredProcedure,
+                transaction: TransactionPrefat);
+            return Convert.ToInt32(idChat);
         }
 
-        /*
-         * 
-        private int InserirDadosConversa(BancoDados bancoDados, Mensagem msg)
+        private void AtualizaIdChat(Mensagem msg, int idChat)
         {
-            return 0;
-            
-            bancoDados.TextoComando = "PRC_CHAT_INSERIR_DADOS_APONTAMENTO";
-            bancoDados.LimparParametros();
-            bancoDados.CriarParametro("ID_LOGIN", DbType.Int32, msg.IdLoginRemetente);
-            bancoDados.CriarParametro("CONVERSA", DbType.String, msg.Conversa);
-            bancoDados.CriarParametro("DS_LOGIN", DbType.String, msg.DsLoginRemetente);
-            bancoDados.CriarParametro("ID_CHAT", DbType.Int32, msg.FkChat);
-            var idChat = Convert.ToInt32(bancoDados.ExecutarEscalar());
-            return idChat;
-            
+            _prefatDbContext.Connection.ExecuteScalar(
+                sql: "PROC_UPDATE_ITEM_CHAT",
+                new
+                {
+                    ID_ITEM = msg.Id,
+                    ID_CHAT = idChat
+                },
+                commandType: CommandType.StoredProcedure,
+                transaction: TransactionPrefat);
         }
-
-        private void AtualizaIdChat(BancoDados bancoDados, Mensagem msg, int idChat)
-        {
-            bancoDados.TextoComando = "PROC_UPDATE_ITEM_CHAT";
-            bancoDados.LimparParametros();
-            bancoDados.CriarParametro("ID_ITEM", DbType.Int32, msg.Id);
-            bancoDados.CriarParametro("ID_CHAT", DbType.Int32, idChat);
-            bancoDados.ExecutarComando();
-        }
-
-        */
     }
 }

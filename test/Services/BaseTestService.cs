@@ -10,11 +10,11 @@ namespace Tests.Services
 {
     public class BaseTestService<T> where T : BaseEntidade
     {
-        protected readonly Mock<IBaseRepositorio<T>> _moqRepositorio;
+        protected readonly Mock<IBaseRepositorio> _moqRepositorio;
 
         public BaseTestService()
         {
-            _moqRepositorio = new Mock<IBaseRepositorio<T>>();
+            _moqRepositorio = new Mock<IBaseRepositorio>();
         }
 
         [Fact]

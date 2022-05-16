@@ -1,48 +1,73 @@
-﻿using Orizon.Rest.Chat.Domain.Entities;
+﻿using Dapper;
+using Orizon.Rest.Chat.Domain.Entities;
 using Orizon.Rest.Chat.Domain.Interfaces.Repositories;
+using Orizon.Rest.Chat.Infra.Data.Contexto;
+using Orizon.Rest.Chat.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using Orizon.Rest.Chat.Utilities;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Orizon.Rest.Chat.Infra.Data.Repositories
 {
     [ExcludeFromCodeCoverage]
 
-    public class ChatRepository : IChatRepository
+    public class ChatRepository : BaseRepositorio, IChatRepository
     {
+        private readonly IChatConversasRepository _chatConversasRepository;
+        private readonly IChatLeituraRepository _chatLeituraRepository;
+
+        public ChatRepository(
+            PrefatDbContext prefatDbContext
+            , DativaDbContext dativaDbContext
+            , IChatConversasRepository chatConversasRepository
+            , IChatLeituraRepository chatLeituraRepository)
+            : base(prefatDbContext, dativaDbContext)
+        {
+            _chatConversasRepository = chatConversasRepository;
+            _chatLeituraRepository = chatLeituraRepository;
+        }
+
         public int Insert(int idLogin)
         {
-            return 0;
-
-            /*
-            var bd = new BancoDados("PreFaturamento")
-            {
-                TextoComando = "PROC_INSERE_CHAT",
-                TipoComando = CommandType.StoredProcedure
-            };
-            bd.CriarParametro("ID_LOGIN", DbType.Int32, idLogin);
-            return Convert.ToInt32(bd.ExecutarEscalar());
-            */
+            BeginTransactionPrefat();
+            var sql =
+                $@"
+                    INSERT INTO
+                        [dbo].[CHAT] ([DATA], [ID_LOGIN])
+                    VALUES
+                        (GETDATE(), {idLogin})
+                    SELECT @@IDENTITY
+                ";
+            var id = _prefatDbContext.Connection.ExecuteScalar(
+                    sql: sql,
+                    transaction: TransactionPrefat
+                );
+            CommitPrefat();
+            return Convert.ToInt32(id);
         }
 
         public void Lido(int idChat, int idLogin)
         {
-            return;
-
-            /*
-            var bd = new BancoDados("PreFaturamento")
-            {
-                TextoComando = "PROC_CHAT_LEITURA",
-                TipoComando = CommandType.StoredProcedure
-            };
-            bd.CriarParametro("ID_CHAT", DbType.Int32, idChat);
-            bd.CriarParametro("ID_LOGIN", DbType.Int32, idLogin);
-            bd.ExecutarComando();
-
-            */
+            BeginTransactionPrefat();
+            var sql =
+                $@"
+                  INSERT INTO
+                      CHAT_LEITURA (DATA_LEITURA, ID_LOGIN, FK_CHAT_CONVERSAS)
+                  SELECT
+                      GETDATE(),
+                      {idLogin},
+                      ID_CHAT_CONVERSAS
+                  FROM
+                      CHAT_CONVERSAS WITH (NOLOCK)
+                  WHERE
+                      FK_CHAT = {idChat}
+                ";
+            _prefatDbContext.Connection.ExecuteScalar(
+                    sql: sql,
+                    transaction: TransactionPrefat
+                );
+            CommitPrefat();
         }
 
         public IEnumerable<ChatE> Listar(int? idChat, int idLogin)
@@ -57,42 +82,32 @@ namespace Orizon.Rest.Chat.Infra.Data.Repositories
 
         private IEnumerable<ChatE> ListarImpl(int? idChat, int idLogin, string origem)
         {
-            return null;
-
-            /*
-            var bd = new BancoDados("PreFaturamento")
+            OpenConnectionPrefat();
+            var sql =
+                $@"
+                  SELECT
+                      ID_CHAT,
+                      DATA,
+                      ID_LOGIN
+                  FROM
+                      CHAT WITH (NOLOCK)
+                  WHERE
+                      ID_CHAT = {idChat}
+                ";
+            var chatsModels = _prefatDbContext.Connection.Query<ChatE>(
+                    sql: sql,
+                    commandType: CommandType.Text
+                );
+            foreach (var chatModel in chatsModels)
             {
-                TextoComando = "PRC_CHAT_LISTAR",
-                TipoComando = CommandType.StoredProcedure
-            };
+                if (origem == null)
+                    chatModel.Conversas = _chatConversasRepository.Listar(chatModel.IdChat);
+                else
+                    chatModel.Conversas = _chatConversasRepository.Listar(chatModel.IdChat, origem);
 
-            bd.CriarParametro("ID_CHAT", DbType.Int32, idChat);
-
-            var dataTable = bd.ExecutarDataTable();
-            return (from DataRow linha in dataTable.Rows select Bind(linha, idLogin, origem)).ToList();
-
-            */
-        }
-
-        private ChatE Bind(DataRow oDataRow, int idLogin, string origem)
-        {
-            var chatModel = new ChatE
-            {
-                IdChat = Convert.ToInt32(oDataRow["ID_CHAT"]),
-                Data = Converter.ConverterToDateTime(oDataRow["DATA"].ToString()),
-                IdLogin = Convert.ToInt32(oDataRow["ID_LOGIN"])
-            };
-
-            /*
-            if (origem == null)
-                chatModel.Conversas = _chatConversasDao.Listar(chatModel.IdChat);
-            else
-                chatModel.Conversas = _chatConversasDao.Listar(chatModel.IdChat, origem);
-
-            chatModel.QtdeNaoLidas = _chatLeituraDao.NaoLidas(chatModel.IdChat, idLogin);
-            */
-
-            return chatModel;
+                chatModel.QtdeNaoLidas = _chatLeituraRepository.NaoLidas(chatModel.IdChat, idLogin);
+            }
+            return chatsModels;
         }
     }
 }
